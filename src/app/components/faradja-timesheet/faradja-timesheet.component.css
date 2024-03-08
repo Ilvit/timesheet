@@ -1,0 +1,69 @@
+.title-background{
+    text-decoration: solid;
+    text-align: center;
+    color: rgb(252, 252, 253);
+    background-color: orangered;
+}
+.title-background-card{
+    text-decoration: solid;
+    text-align: center;
+    color: rgb(252, 252, 253);
+    background-color: rgb(17, 17, 80);
+}
+.ts-bg{
+    background-color: rgb(202, 202, 202);
+}
+.ts-dashbord-bg{
+    overflow-x: auto;
+    background-color: rgb(255, 255, 255);
+}
+.cell-style{    
+    border: 2px;
+    border-color: black;
+    width: 55px;
+    text-align: center;
+    color: rgb(23, 11, 129);
+    background-color: rgb(255, 255, 255);
+}
+.cell-style-weekend{    
+    border: 2px;
+    border-color: black;
+    width: 55px;
+    text-align: center;
+    color: rgb(202, 202, 202);
+    background-color: rgb(202, 202, 202);
+}
+.cell-style-v-total{    
+    border: 4px;
+    border-color: rgb(131, 3, 10);
+    width: 55px;
+    text-align: center;
+    font-size: large;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: rgb(177, 5, 111);
+    background-color: rgb(129, 245, 220);
+}
+.horiz-bar{
+    overflow: auto;
+}
+.total-txt{    
+    border: 5px;
+    width: 80px;
+    text-align: center;
+    font-size: large;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: rgb(255, 255, 255);
+    border-color: rgb(241, 6, 6);
+}
+.weekend-bg-color{
+    color: rgb(202, 202, 202);
+    background-color: rgb(202, 202, 202);
+}
+.theader-bg-color{
+    font-style: italic;
+    font-size: x-small;
+    background-color: rgb(230, 229, 229);
+}
+.faradja-bg2{
+    background-color: rgb(17, 17, 80);
+}

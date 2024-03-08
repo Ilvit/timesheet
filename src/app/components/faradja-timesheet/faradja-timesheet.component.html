@@ -1,0 +1,196 @@
+<h3 class="title-background">My Timesheet</h3>
+<div class="ts-bg ">
+    <div class="container-fluid p-2  ">
+        <div class="card ">
+            <div class="card-body text-center ts-dashbord-bg ">
+                <span class="btn btn-info btn-sm ">{{authService.username}} </span>
+                <span class="ms-3 ">ID:</span><span class="btn btn-info btn-sm ms-1  ">{{authService.employeeID}} </span>
+                <span class="ms-2 me-1 " for="">VACATION DAYS: </span><span class="btn btn-info btn-sm">10</span>
+            </div>
+        </div>
+    </div>
+    <div class="nav col-md-12 ">
+        <div class="card col-md-2 mt-2">
+            <div class="card-header title-background-card ">
+                Periods
+            </div>
+            <div class="card-body">
+                <ul class="nav ">
+                    <li class="nav-item " *ngFor="let per of timesheetDTO.timesheetsPeriods"><button class="btn btn-outline-danger btn-sm text-sm-center ">{{per}}</button> </li>
+                </ul>
+            </div>
+        </div>
+        <div class="container  col-md-8 mt-2 horiz-bar">
+            <div class="card-header text-center  ">
+                <h2 class="faradja-bg2 p-2 text-light ">ULINZI 2030</h2>
+            </div>
+            <div class="card-body ts-bg">
+                <form [formGroup]="timesheetDTOFormGroup"  >
+                    <div class="ts-dashbord-bg  ">
+                        <span class=" ">BUSINESS DAYS TIMESHEET-LINE </span>                        
+                    </div>
+                    
+                    <div *ngIf="!timesheetDTO.businessDaysPresent">
+                        <button type="button" class="btn btn-outline-success btn-sm mt-2 " (click)="getNewBusinessDaysLine()">
+                            New line
+                            <i class="bi bi-plus-circle-fill"></i>
+                        </button>
+                    </div>
+                    <table class=" table-bordered  ">
+                        <thead class="theader-bg-color " >
+                            <th *ngFor="let sd of timesheetDTO.timesheet.businessDaysLine" >
+                                <span>{{sd.date |date:'EE' }} <br> </span>
+                                <span>{{sd.date |date:'dd-MMM' }}</span>
+                            </th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td *ngFor="let sd of timesheetDTO.timesheet.businessDaysLine" >
+                                    <input title="put hours" [class]="sd.weekend?'cell-style-weekend':'cell-style'"[disabled]="sd.weekend" type="number" value="{{sd.hours}}"
+                                    [(ngModel)]="sd.hours"[ngModelOptions]="{standalone:true}" >
+                                </td>   
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="container-fluid ts-dashbord-bg mt-3 ">
+                        <span>PUBLIC HOLIDAYS TIMESHEET-LINE</span>                         
+                    </div>                    
+                    <div *ngIf="!timesheetDTO.holidaysPresent">
+                        <button type="button" class="btn btn-outline-success btn-sm mt-2 " (click)="getNewHolidaysLine()">
+                            New line
+                            <i class="bi bi-plus-circle-fill"></i>
+                        </button>
+                    </div>
+                    <table class=" table-bordered  ">
+                        <thead class="theader-bg-color " >
+                            <th *ngFor="let hd of timesheetDTO.timesheet.holidaysLine" >
+                                <span>{{hd.date |date:'EE' }} <br> </span>
+                                <span>{{hd.date |date:'dd-MMM' }}</span>
+                            </th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td *ngFor="let hd of timesheetDTO.timesheet.holidaysLine" >
+                                    <input title="put hours"[(ngModel)]="hd.hours" [ngModelOptions]="{standalone:true}" [class]="hd.weekend?'cell-style-weekend':'cell-style'"[disabled]="hd.weekend" type="number" value="{{hd.hours}}" >
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="container-fluid ts-dashbord-bg mt-3 ">
+                        WEEKEND TIMESHEET-LINE
+                    </div>
+                    <div *ngIf="!timesheetDTO.weekendDaysPresent">
+                        <button type="button" class="btn btn-outline-success btn-sm mt-2 " (click)="getNewWeekendDaysLine()">
+                            New line
+                            <i class="bi bi-plus-circle-fill"></i>
+                        </button>
+                    </div>
+
+                    <table class=" table-bordered  ">
+                        <thead class="theader-bg-color " >
+                            <th *ngFor="let wd of timesheetDTO.timesheet.weekendDaysLine" >
+                                <span>{{wd.date |date:'EE' }} <br> </span>
+                                <span>{{wd.date |date:'dd-MMM' }}</span>
+                            </th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td *ngFor="let wd of timesheetDTO.timesheet.weekendDaysLine" >
+                                    <input title="put hours"[(ngModel)]="wd.hours" [ngModelOptions]="{standalone:true}" [class]="wd.weekend?'cell-style':'cell-style-weekend'" [disabled]="!wd.weekend" type="number" value="{{wd.hours}}" >
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="mt-2 mb-1 "><span class="text-success">TOTAL HOURS</span></div>
+                    <table class="table-bordered ">         
+                        <tbody>
+                            <tr>
+                                <td *ngFor="let vth of timesheetDTO.timesheet.verticalTotalHours" >
+                                    <button type="button" title="total of the column" class="cell-style-v-total">{{vth.totalHours}}</button>
+                                </td>                                
+                            </tr> 
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+        <div class="card col-1 mt-2 ts-bg">
+            <div class="card-header bg-primary ">
+                <span class="text-sm-center ">Manage</span>
+            </div>
+            <div class="card-body">
+                <div class="container-fluid  ts-bg"><br></div>
+                <div class="row mt-3 ">
+                    <div class="col-6 mt-1 ">
+                       <button class="">{{timesheetDTO.timesheet.businessTotalHours}} </button>
+                    </div>
+                    <div class="col-3 mt-1  ">
+                        <button *ngIf="timesheetDTO.businessDaysPresent" title="delete timesheet line" type="button" class="btn btn-outline-danger btn-sm" (click)="deleteBusinessDayLine()">
+                            <i class="bi bi-trash-fill" ></i>    
+                        </button>
+                    </div>
+                </div>
+                <div class="container-fluid  ts-bg"><br></div>
+                <div class="row mt-4  ">
+                    <div class="col-6 mt-2 ">
+                       <button class="">{{timesheetDTO.timesheet.holidaysTotalHours}} </button>
+                    </div>
+                    <div class="col-3 mt-2  ">
+                        <button *ngIf="timesheetDTO.holidaysPresent" title="delete timesheet line" type="button" class="btn btn-outline-danger btn-sm" (click)="deletePublicHolidayLine()">
+                            <i class="bi bi-trash-fill" ></i>    
+                        </button>
+                    </div>
+                </div>
+                <div class="row mt-5   ">
+                    <div class="col-6 mt-2 ">
+                       <button class="">{{timesheetDTO.timesheet.weekendTotalHours}} </button>
+                    </div>
+                    <div class="col-3 mt-2  ">
+                        <button *ngIf="timesheetDTO.weekendDaysPresent" title="delete timesheet line" type="button" class="btn btn-outline-danger btn-sm" (click)="deleteWeekendDayLine()">
+                            <i class="bi bi-trash-fill" ></i>    
+                        </button>
+                    </div>
+                </div>
+                <div class="row mt-4   ">
+                    <div class="col-12 mt-2 ">
+                       <button class="btn btn-primary total-txt">{{timesheetDTO.timesheet.totalHours}} </button>
+                    </div>                    
+                </div>
+                
+            </div>
+            
+        </div>
+        <div class="card col-md-1 mt-2 ">
+            <div class="card-header title-background-card">
+                Actions
+            </div>
+            <div class="card-body">
+                <div class="bg-danger-subtle ">
+                    <label for="" class="text-light ">Unapproved</label>
+                </div>
+                <div class="btn-group mt-2 mb-2 ">
+                    <button type="button" class="btn btn-outline-danger btn-sm " (click)="deleteTimesheet()">
+                        delete
+                        <i class="bi bi-trash-fill" style="font-size: 1em; color: #f72541;"></i>
+                    </button>
+                </div>
+                <div class="btn-group mt-2 mb-2 "> 
+                    <button type="button" class="btn btn-outline-success btn-sm " (click)="saveTimesheet()">
+                        Save
+                        <i class="bi bi-save-fill" style="font-size: 1em; color: #007bff;"></i>
+                    </button>
+                </div>
+                
+                <div class="btn-group ">
+                    <button type="button" class="btn btn-outline-success btn-sm " >
+                        Sign
+                        <i class="bi bi-signal" style="font-size: 2em; color: #007bff;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

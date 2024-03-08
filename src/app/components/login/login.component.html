@@ -1,0 +1,24 @@
+<div class="faradja-bg">
+    <div class="p-4 "></div>
+    <div class="card col-4 offset-4 ">
+
+        <div class="card-header">
+            <span>AUTHENTICATION</span>
+        </div>
+        <div class="card-body">
+            <form [formGroup]="loginFormGroup" (ngSubmit)="login()">
+                <div class="input-group mt-2  ">
+                    <label class="input-group-text " for="username">username</label>
+                    <input class="form-control " placeholder="username" type="text" name="" id="username"formControlName="username" >
+                </div>
+                <div class="input-group mt-2  ">
+                    <label class="input-group-text " for="password">password</label>
+                    <input class="form-control "placeholder="password" type="password" name="" id="password"formControlName="password">
+                </div>
+                <div class="input-group mt-2   ">
+                    <button type="submit" class="btn btn-primary ">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

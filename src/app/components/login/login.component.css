@@ -1,0 +1,11 @@
+.faradja-bg{
+    border-color: orangered;
+    background-color: rgb(17, 17, 80);
+    height: 620px;
+}
+#log{
+    height: 700px;
+    color: orangered;
+    background-size: 100%;
+    background-size: cover;
+}
