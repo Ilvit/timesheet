@@ -5,7 +5,8 @@ export interface TimesheetDTO{
     timesheetPeriod:string;
     businessDaysPresent:boolean;
     holidaysPresent:boolean;
-    weekendDaysPresent:boolean
+    weekendDaysPresent:boolean;
+    loaded:boolean
 }
 export interface Timesheet{
     employeeID: string;
@@ -54,4 +55,17 @@ export interface AppUser{
     mail:string;
     employeeID:string;
     roles:string[];
+}
+export enum DataStateEnum{
+    LOADING, LOADED, ERROR
+}
+export interface AppDataState<T>{
+    dataState?:DataStateEnum;
+    timesheetDto?:TimesheetDTO;
+    errorMessage?:string;
+}
+export interface LoginDataState<T>{
+    dataState?:DataStateEnum;
+    data?:any;
+    errorMessage?:string;
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { TimesheetDTO } from 'src/app/models/timesheet.model';
+import { Observable, catchError, map, of, startWith } from 'rxjs';
+import { AppDataState, DataStateEnum, TimesheetDTO } from 'src/app/models/timesheet.model';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { FtimesheetService } from 'src/app/services/ftimesheet.service';
 
@@ -11,66 +12,66 @@ import { FtimesheetService } from 'src/app/services/ftimesheet.service';
 })
 export class FaradjaTimesheetComponent implements OnInit{
 
-  timesheetDTOFormGroup!:FormGroup;
-  timesheetDTO!:TimesheetDTO;
+  timesheetDTO?:Observable<AppDataState<TimesheetDTO>>|null;
+  readonly DataStateEnum=DataStateEnum;
+  tsDTO?:TimesheetDTO;
   period!:string;
 
   constructor(private timesheetService:FtimesheetService, private fb:FormBuilder, public authService:AuthenticationService){}
 
   ngOnInit(): void {    
     this.getTimesheet();
-    this.timesheetDTOFormGroup=this.fb.group({
-      businessDaysLine:this.fb.array(this.timesheetDTO.timesheet.businessDaysLine),
-      weekendDaysLine:this.fb.array(this.timesheetDTO.timesheet.weekendDaysLine),
-      holidaysLine:this.fb.array(this.timesheetDTO.timesheet.holidaysLine)
-    }) 
+
   }
   getTimesheet(){
-    this.timesheetService.getTimesheet("",this.authService.employeeID).subscribe({
-      next: data=>{
-        this.timesheetDTO=data;
-        this.period=this.timesheetDTO.timesheetPeriod;
-      }, error:err=>{
-        console.log(err);
+    this.timesheetDTO=this.timesheetService.getTimesheet("",this.authService.employeeID).pipe(
+      map(data=>({dataState:DataStateEnum.LOADED,timesheetDto:data})),
+      startWith({dataState:DataStateEnum.LOADING}),
+      catchError(err=>of({dataState:DataStateEnum.ERROR, errorMessage:err.message}))
+    );
+    this.timesheetDTO.subscribe({
+      next:data=>{
+        this.tsDTO=data.timesheetDto;
       }
     })
   }
   getNewHolidaysLine(){    
-    this.timesheetService.getNewTimesheetLine(this.authService.employeeID, this.authService.employeeID,"PUBHDCH-24").subscribe({
+    this.timesheetDTO=this.timesheetService.getNewTimesheetLine("",this.authService.employeeID,"PUBHDCH-24").pipe(
+      map(data=>({dataState:DataStateEnum.LOADED,timesheetDto:data})),
+      startWith({dataState:DataStateEnum.LOADING}),
+      catchError(err=>of({dataState:DataStateEnum.ERROR, errorMessage:err.message}))
+    );
+    this.timesheetDTO.subscribe({
       next:data=>{
-        this.timesheetDTO=data;
-      },error:err=>{
-        console.log(err);
+        this.tsDTO=data.timesheetDto;
       }
     })
   }
   getNewWeekendDaysLine(){
-    this.timesheetService.getNewTimesheetLine(this.timesheetDTO.timesheetPeriod,this.authService.employeeID,"WEEDCH-24").subscribe({
+    this.timesheetDTO=this.timesheetService.getNewTimesheetLine("",this.authService.employeeID,"WEEDCH-24").pipe(
+      map(data=>({dataState:DataStateEnum.LOADED,timesheetDto:data})),
+      startWith({dataState:DataStateEnum.LOADING}),
+      catchError(err=>of({dataState:DataStateEnum.ERROR, errorMessage:err.message}))
+    );
+    this.timesheetDTO.subscribe({
       next:data=>{
-        this.timesheetDTO=data;
-      },error:err=>{
-        console.log(err);
+        this.tsDTO=data.timesheetDto;
       }
     })
   }
   getNewBusinessDaysLine(){
-    this.timesheetService.getNewTimesheetLine(this.timesheetDTO.timesheetPeriod,this.authService.employeeID,"BUSDCH-24").subscribe({
+    this.timesheetDTO=this.timesheetService.getNewTimesheetLine("",this.authService.employeeID,"BUSDCH-24").pipe(
+      map(data=>({dataState:DataStateEnum.LOADED,timesheetDto:data})),
+      startWith({dataState:DataStateEnum.LOADING}),
+      catchError(err=>of({dataState:DataStateEnum.ERROR, errorMessage:err.message}))
+    );
+    this.timesheetDTO.subscribe({
       next:data=>{
-        this.timesheetDTO=data;
-      },error:err=>{
-        console.log(err);
+        this.tsDTO=data.timesheetDto;
       }
     })
   }
-  saveTimesheet(){
-    this.timesheetService.saveTimesheet(this.period, this.timesheetDTO).subscribe({
-      next:data=>{
-        this.getTimesheet();
-      }, error:err=>{
-        console.log(err);
-      }
-    })
-  }
+  
   deletePublicHolidayLine(){
     if(confirm("DO YOU WANT TO DELETE THIS TIMESHEET LINE ?")){
       this.timesheetService.deleteTimesheetLine(this.period, this.authService.employeeID,"PUBHDCH-24").subscribe({
@@ -99,6 +100,12 @@ export class FaradjaTimesheetComponent implements OnInit{
       })
     }    
   }
+  saveTimesheet() {
+    this.timesheetService.saveTimesheet(this.period, this.tsDTO!).subscribe({
+      next:data=>this.getTimesheet()
+    })
+  }
+    
 
   deleteTimesheet(){
     

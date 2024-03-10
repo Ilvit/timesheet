@@ -6,7 +6,7 @@
             <span>AUTHENTICATION</span>
         </div>
         <div class="card-body">
-            <form [formGroup]="loginFormGroup" (ngSubmit)="login()">
+            <form [formGroup]="loginFormGroup" (ngSubmit)="newLogin()">
                 <div class="input-group mt-2  ">
                     <label class="input-group-text " for="username">username</label>
                     <input class="form-control " placeholder="username" type="text" name="" id="username"formControlName="username" >
@@ -20,5 +20,17 @@
                 </div>
             </form>
         </div>
+        <div>
+            <div class="f-bgc">
+                <ng-container *ngIf="myData|async as authData" [ngSwitch]="authData.dataState">
+                    <ng-container *ngSwitchCase="DataStateEnum.ERROR">
+                        <span class="text-danger t-bgc text-center  "> Failed! please try again </span>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="DataStateEnum.LOADING">
+                        <span class="text-success text-lg-center ">PLEASE WAIT ..... </span>
+                    </ng-container>
+                </ng-container>
+            </div>
+        </div>        
     </div>
 </div>

@@ -11,6 +11,7 @@ import { FaradjaTimesheetComponent } from './components/faradja-timesheet/faradj
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { TsUserComponent } from './components/ts-user/ts-user.component';
 import { AppHttpInterceptor } from './interceptors/app-http.interceptor';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -18,7 +19,7 @@ import { AppHttpInterceptor } from './interceptors/app-http.interceptor';
     LoginComponent,
     FaradjaTimesheetComponent,
     NavbarComponent,
-    TsUserComponent    
+    TsUserComponent
   ],
   imports: [
     BrowserModule,
