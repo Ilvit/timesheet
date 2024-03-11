@@ -101,11 +101,13 @@ export class FaradjaTimesheetComponent implements OnInit{
     }    
   }
   saveTimesheet() {
-    this.timesheetService.saveTimesheet(this.period, this.tsDTO!).subscribe({
-      next:data=>this.getTimesheet()
-    })
+     this.timesheetService.saveTimesheet(this.period, this.tsDTO!).subscribe({
+      next:data=>{
+        this.tsDTO=data;
+      }
+    })    
   }
-    
+      
 
   deleteTimesheet(){
     
