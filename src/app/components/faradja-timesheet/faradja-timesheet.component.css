@@ -33,6 +33,30 @@
     color: rgb(202, 202, 202);
     background-color: rgb(202, 202, 202);
 }
+.cell-style-holidayline{    
+    border: 2px;
+    border-color: black;
+    width: 55px;
+    text-align: center;
+    color: rgb(202, 202, 202);
+    background-color: rgb(140, 228, 137);
+}
+.cell-style-holiday{    
+    border: 2px;
+    border-color: black;
+    width: 55px;
+    text-align: center;
+    color: rgb(245, 180, 220);
+    background-color: rgb(245, 180, 220);
+}
+.cell-style-holiday-active{    
+    border: 2px;
+    border-color: black;
+    width: 55px;
+    text-align: center;
+    color: rgb(95, 13, 64);
+    background-color: rgb(237, 245, 147);
+}
 .cell-style-v-total{    
     border: 4px;
     border-color: rgb(131, 3, 10);

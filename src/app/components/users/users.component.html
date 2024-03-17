@@ -1,0 +1,159 @@
+<h4 class="faradja-bg2 text-light  text-center ">{{title}} </h4>
+<div class="row p-2  ">
+    <div class="row col-12 p-2">
+        <div class="card col-7 mt-sm-1 userscroll-bar">
+            <ng-container *ngIf="users|async as result" [ngSwitch]="result.dataState">
+                <ng-container *ngSwitchCase="DataStateEnum.ERROR">
+                    <span class="alert-danger text-center ">{{result.errorMessage}} </span>
+                </ng-container>
+                <ng-container *ngSwitchCase="DataStateEnum.LOADING">
+                    <span class="text-success text-center ">
+                        LOADING.....
+                    </span>
+                </ng-container>
+                <ng-container *ngSwitchCase="DataStateEnum.LOADED">
+                    <table class="table  table-striped table-responsive ">
+                        <thead>
+                            <th>ID</th><th>Username</th><th>Mail</th>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let u of result.appUsers">
+                                <td>{{u.employeeID}} </td><td><button class="btn" (click)="describe(u)">{{u.username}}</button> </td><td><button class="btn" (click)="describe(u)">{{u.mail}}</button> </td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning " (click)="editUser(u)"><i class="bi bi-pencil-fill"></i> </button>    
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-danger " (click)="deleteUser(u)"><i class="bi bi-trash-fill"></i> </button>    
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </ng-container>
+            </ng-container>
+            
+        </div>
+        <div class="card col-4 p-2 panel-bg ">
+            <ng-container [ngSwitch]="appUserStateEnum" >
+                <ng-container *ngSwitchCase="AppUserStateEnum.NONE">
+                    <h2 class="text-center text-primary ">WELCOME </h2>
+                </ng-container>
+                <ng-container *ngSwitchCase="AppUserStateEnum.EDIT">
+                    <div class="mt-2 card ">
+                        <div class="card-header ">EDIT THE USER</div>
+                        <div class="card-body ">
+                            <form [formGroup]="userFormGroup" (ngSubmit)="updateUser()">
+                                <div class="input-group mt-1">
+                                    <label class="input-group-text " for="i_username">Username</label>
+                                    <input type="text" class="form-control " id="i_username" formControlName="username">
+                                </div>
+                                <div class="input-group mt-1 ">
+                                    <label class="input-group-text" for="i_pwd">password</label>
+                                    <input type="password" class="form-control " id="i_pwd" formControlName="password" >
+                                </div>
+                                <span class="mt-1 mb-1 text-warning ">The same password</span>
+                                <div class="input-group ">
+                                    <label class="input-group-text " for="i_pwd2">password</label>
+                                    <input type="password" class="form-control " id="i_pwd2" >
+                                </div>
+                                <div class="input-group mt-1  ">
+                                    <label class="input-group-text" for="i_mail">E-mail</label>
+                                    <input type="email" class="form-control " id="i_mail" formControlName="mail" >
+                                </div>
+                                <div class="input-group mt-1  ">
+                                    <label class="input-group-text" for="i_eid">Employee-ID</label>
+                                    <input type="text" class="form-control-sm  " maxlength="8" id="i_eid" formControlName="employeeID" >
+                                </div>
+                                <div>Set roles</div>
+                                <div >
+                                    <ul>
+                                        <li *ngFor="let ur of userTo.userRoles"> 
+                                            <input class="form-check-input mt-1  " id="{{ur.roleName}}" type="checkbox"
+                                            [(ngModel)]="ur.hasRole" [ngModelOptions]="{standalone:true}">
+                                            <label for="{{ur.roleName}}" class="ms-2 ">{{ur.roleName}}</label>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="input-group mt-2 ">
+                                    <button class="btn btn-dark " type="submit">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="AppUserStateEnum.ADDNEW">
+                    <div class="card  ">
+                        <div class="card-header bg-success text-light  ">ADD A NEW USER</div>
+                        <div class="card-body">
+                            <form [formGroup]="userFormGroup" (ngSubmit)="saveUser()">
+                                <div class="input-group mt-1">
+                                    <label class="input-group-text " for="i_username">Username</label>
+                                    <input type="text" class="form-control " id="i_username" formControlName="username">
+                                </div>
+                                <div class="input-group mt-1 ">
+                                    <label class="input-group-text" for="i_pwd">password</label>
+                                    <input type="password" class="form-control " id="i_pwd" formControlName="password" >
+                                </div>
+                                <span class="mt-1 mb-1 text-warning ">The same password</span>
+                                <div class="input-group ">
+                                    <label class="input-group-text " for="i_pwd2">password</label>
+                                    <input type="password" class="form-control " id="i_pwd2" >
+                                </div>
+                                <div class="input-group mt-1  ">
+                                    <label class="input-group-text" for="i_mail">E-mail</label>
+                                    <input type="email" class="form-control " id="i_mail" formControlName="mail" >
+                                </div>
+                                <div class="input-group mt-1  ">
+                                    <label class="input-group-text" for="i_eid">Employee-ID</label>
+                                    <input type="text" class="form-control-sm  " maxlength="8" id="i_eid" formControlName="employeeID" >
+                                </div>
+                                <div class="input-group mt-2 ">
+                                    <button class="btn btn-dark " type="submit">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="AppUserStateEnum.READ">
+                    <div class="card">
+                        <div class="card-body">
+                            <div>
+                                <span class="me-2 text-primary ">Username : </span><span class="btn btn-info">{{userTo.username}} </span>
+                            </div>
+                            <div class="mt-2">
+                                <span class="me-2 text-primary ">Employee-ID : </span><span  class="btn btn-info">{{userTo.employeeID}} </span>
+                            </div>
+                            <div class="mt-2">
+                                <span class="me-2 text-primary  ">Mail : </span><span  class="btn btn-info">{{userTo.mail}} </span>
+                            </div>
+                            <div class=" card text-success mt-2 mb-2 ">
+                                <div class="card-header">
+                                    Roles
+                                </div>
+                                <div class="card-body">
+                                    <div>
+                                        <ul >
+                                            <li *ngFor="let r of userTo.roles">
+                                                <span class="text-primary ">{{r.name}} </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>                                
+                            </div>
+                            
+
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </div>
+        <div class="col-1 ">
+            <div class="p-2  ">
+                <button class="btn btn-success " title="Add a new user" (click)="getNewUser()">
+                   new User 
+                   <i class="bi bi-plus-circle"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+</div>

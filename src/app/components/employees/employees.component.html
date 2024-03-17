@@ -1,0 +1,187 @@
+<h4 class="faradja-bg2 text-light  text-center ">{{title}} </h4>
+<div class="row p-2  ">
+    <div class="row col-12 p-2">
+        <div class="card col-7 mt-sm-1 userscroll-bar">
+            <ng-container *ngIf="employees|async as result" [ngSwitch]="result.dataState">
+                <ng-container *ngSwitchCase="DataStateEnum.ERROR">
+                    <span class="alert-danger text-center ">{{result.errorMessage}} </span>
+                </ng-container>
+                <ng-container *ngSwitchCase="DataStateEnum.LOADING">
+                    <span class="text-success text-center ">
+                        LOADING.....
+                    </span>
+                </ng-container>
+                <ng-container *ngSwitchCase="DataStateEnum.LOADED">
+                    <div class="card">
+                        <table class="table table-sm table-striped table-responsive ">
+                            <thead>
+                                <th>ID</th><th>Name</th><th>Mail</th>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let e of result.employs">
+                                    <td>{{e.id}} </td><td><button class="btn" (click)="describe(e)">{{e.name+' '+e.postName+' '+e.nickName}}</button> </td><td><button class="btn" (click)="describe(e)">{{e.mail}}</button> </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-warning " (click)="editEmployee(e)"><i class="bi bi-pencil-fill"></i> </button>    
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-danger " (click)="deleteEmployee(e)"><i class="bi bi-trash-fill"></i> </button>    
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </ng-container>
+            </ng-container>
+            
+        </div>
+        <div class="card col-4 p-2 panel-bg ">
+            <ng-container [ngSwitch]="employeeStateEnum" >
+                <ng-container *ngSwitchCase="EmployeeStateEnum.NONE">
+                    <h2 class="text-center text-primary ">WELCOME </h2>
+                </ng-container>
+                <ng-container *ngSwitchCase="EmployeeStateEnum.EDIT">
+                    <div class="mt-2 card ">
+                        <div class="card-header ">EDIT THE EMPLOYEE</div>
+                        <div class="card-body ">
+                            <form [formGroup]="employeeFormGroup" (ngSubmit)="updateEmployee()">
+                                <div class="input-group mt-1">
+                                    <label class="input-group-text " for="i_name">Name</label>
+                                    <input type="text" class="form-control " id="i_name" formControlName="name">
+                                </div>
+                                <div class="input-group mt-1">
+                                    <label class="input-group-text " for="i_pname">Post-Name</label>
+                                    <input type="text" class="form-control " id="i_pname" formControlName="postName">
+                                </div>
+                                <div class="input-group mt-1">
+                                    <label class="input-group-text " for="i_nname">Nick-Name</label>
+                                    <input type="text" class="form-control " id="i_nname" formControlName="nickName">
+                                </div>                                
+                                <span class="mt-1 mb-1 text-warning ">Select the gender</span>
+                                <div class="input-group mt-1">
+                                    <label class="input-group-text " for="i_gender">Gender</label>
+                                    <select name="genders" id="i_gender" formControlName="gender">
+                                        <option *ngFor="let gender of genders" value="{{gender}}">{{gender}} </option>
+                                    </select>
+                                </div>
+                                <div class="input-group mt-1">
+                                    <label class="input-group-text " for="i_pnumber">Phone number</label>
+                                    <input type="text" class="form-control " id="i_pnumber" formControlName="phoneNumber">
+                                </div>
+                                <div class="input-group mt-1  ">
+                                    <label class="input-group-text" for="i_mail">E-mail</label>
+                                    <input type="email" class="form-control " id="i_mail" formControlName="mail" >
+                                </div>
+                                <span class="mt-1 mb-1 text-success ">Select the employee's position</span>
+                                <div class="input-group mt-1  ">
+                                    <label class="input-group-text" for="i_pos">Position</label>
+                                    <select name="postions" id="i_pos" formControlName="position">
+                                        <option *ngFor="let pos of positions" value="{{pos}}">{{pos}} </option>
+                                    </select>
+                                </div>
+                                <div class="input-group mt-1  ">
+                                    <label class="input-group-text" for="i_seid">Supervisor-ID</label>
+                                    <input type="text" class="form-control-sm  " maxlength="8" id="i_seid" formControlName="supervisorID" >
+                                </div>
+                                <div class="input-group mt-2 ">
+                                    <button class="btn btn-dark " type="submit">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="EmployeeStateEnum.ADDNEW">
+                    <div class="card  ">
+                        <div class="card-header bg-success text-light  ">ADD A NEW USER</div>
+                        <div class="card-body">
+                            <form [formGroup]="employeeFormGroup" (ngSubmit)="saveEmployee()">
+                                <div class="input-group mt-1">
+                                    <label class="input-group-text " for="i_name">Name</label>
+                                    <input type="text" class="form-control " id="i_name" formControlName="name">
+                                </div>
+                                <div class="input-group mt-1">
+                                    <label class="input-group-text " for="i_pname">Post-Name</label>
+                                    <input type="text" class="form-control " id="i_pname" formControlName="postName">
+                                </div>
+                                <div class="input-group mt-1">
+                                    <label class="input-group-text " for="i_nname">Nick-Name</label>
+                                    <input type="text" class="form-control " id="i_nname" formControlName="nickName">
+                                </div>                                
+                                <span class="mt-1 mb-1 text-warning ">Select the gender</span>
+                                <div class="input-group mt-1">
+                                    <label class="input-group-text " for="i_gender">Gender</label>
+                                    <select name="genders" id="i_gender" formControlName="gender">
+                                        <option *ngFor="let gender of genders" value="{{gender}}">{{gender}} </option>
+                                    </select>
+                                </div>
+                                <div class="input-group mt-1">
+                                    <label class="input-group-text " for="i_pnumber">Phone number</label>
+                                    <input type="text" class="form-control " id="i_pnumber" formControlName="phoneNumber">
+                                </div>
+                                <div class="input-group mt-1  ">
+                                    <label class="input-group-text" for="i_mail">E-mail</label>
+                                    <input type="email" class="form-control " id="i_mail" formControlName="mail" >
+                                </div>
+                                <span class="mt-1 mb-1 text-success ">Select the employee's position</span>
+                                <div class="input-group mt-1  ">
+                                    <label class="input-group-text" for="i_pos">Position</label>
+                                    <select name="postions" id="i_pos" formControlName="position">
+                                        <option *ngFor="let pos of positions" value="{{pos}}">{{pos}} </option>
+                                    </select>
+                                </div>
+                                <div class="input-group mt-1  ">
+                                    <label class="input-group-text" for="i_seid">Supervisor-ID</label>
+                                    <input type="text" class="form-control-sm  " maxlength="8" id="i_seid" formControlName="supervisorID" >
+                                </div>
+                                <div class="input-group mt-2 ">
+                                    <button class="btn btn-dark " type="submit">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="EmployeeStateEnum.READ">
+                    <div class="card">
+                        <div class="card-body">
+                            <div>
+                                <span class="me-2 text-primary ">ID : </span><span class="btn btn-sm btn-info">{{employeeTo.id}} </span>
+                            </div>
+                            <div class="mt-2">
+                                <span class="me-2 text-primary ">NAME : </span><span  class="btn btn-sm btn-info">{{employeeTo.name}} </span>
+                            </div>
+                            <div class="mt-2">
+                                <span class="me-2 text-primary  ">POST-NAME : </span><span  class="btn btn-sm btn-info">{{employeeTo.postName}} </span>
+                            </div>
+                            <div class="mt-2">
+                                <span class="me-2 text-primary  ">NICK-NAME : </span><span  class="btn btn-sm btn-info">{{employeeTo.nickName}} </span>
+                            </div>
+                            <div class="mt-2">
+                                <span class="me-2 text-primary  ">GENDER : </span><span  class="btn btn-sm btn-info">{{employeeTo.gender}} </span>
+                            </div>
+                            <div class="mt-2">
+                                <span class="me-2 text-primary  ">PHONE-NUMBER : </span><span  class="btn btn-sm btn-info">{{employeeTo.phoneNumber}} </span>
+                            </div>
+                            <div class="mt-2">
+                                <span class="me-2 text-primary  ">E-MAIL : </span><span  class="btn btn-sm btn-info">{{employeeTo.mail}} </span>
+                            </div>
+                            <div class="mt-2">
+                                <span class="me-2 text-primary  ">POSITION : </span><span  class="btn btn-sm btn-info">{{employeeTo.position}} </span>
+                            </div>                       
+                            <div class="mt-2">
+                                <span class="me-2 text-primary  ">SUPERVISOR-ID : </span><span  class="btn btn-sm btn-info">{{employeeTo.supervisorID}} </span>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </div>
+        <div class="col-1 ">
+            <div class="p-2  ">
+                <button class="btn btn-success " title="Add a new employee" (click)="getNewEmployee()">
+                   new Employee 
+                   <i class="bi bi-plus-circle"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+</div>

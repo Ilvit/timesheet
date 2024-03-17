@@ -22,7 +22,7 @@
         </div>
         <div class="container  col-md-8 mt-2 horiz-bar">
             <div class="card-header text-center  ">
-                <h2 class="faradja-bg2 p-2 text-light ">ULINZI 2030</h2>
+                <h2 class="faradja-bg2 p-2 text-light ">USAID-ULINZI 2030</h2>
             </div>
             
             <div class="card-body ts-bg">
@@ -46,7 +46,7 @@
                 </div>
                 <table class=" table-bordered  ">
                     <thead class="theader-bg-color " >
-                        <th *ngFor="let sd of tsDTO?.timesheet?.businessDaysLine" >
+                        <th *ngFor="let sd of result.timesheetDto?.timesheet?.businessDaysLine" >
                             <span>{{sd.date |date:'EE' }} <br> </span>
                             <span>{{sd.date |date:'dd-MMM' }}</span>
                         </th>
@@ -54,8 +54,8 @@
                     <tbody>
                         <tr>
                             <td *ngFor="let sd of tsDTO?.timesheet?.businessDaysLine" >
-                                <input title="put hours" [class]="sd.weekend?'cell-style-weekend':'cell-style'"[disabled]="sd.weekend" type="number" value="{{sd.hours}}"
-                                [(ngModel)]="sd.hours"[ngModelOptions]="{standalone:true}" >
+                                <input title="put hours"*ngIf="!sd.holiday" [class]="sd.weekend?'cell-style-weekend':'cell-style'"[disabled]="sd.weekend" type="number" value="{{sd.hours}}" [(ngModel)]="sd.hours"[ngModelOptions]="{standalone:true}" oninput="checkContent(sd.hours)" maxlength="2" min="0">
+                                <input title="put hours"[(ngModel)]="sd.hours" [ngModelOptions]="{standalone:true}" *ngIf="sd.holiday" [class]="sd.weekend?'cell-style-weekend':'cell-style-holiday'"[disabled]="sd.holiday" type="number" >
                             </td>   
                         </tr>
                     </tbody>
@@ -80,7 +80,8 @@
                     <tbody>
                         <tr>
                             <td *ngFor="let hd of tsDTO?.timesheet?.holidaysLine" >
-                                <input title="put hours"[(ngModel)]="hd.hours" [ngModelOptions]="{standalone:true}" [class]="hd.weekend?'cell-style-weekend':'cell-style'"[disabled]="hd.weekend" type="number" value="{{hd.hours}}" >
+                                <input *ngIf="!hd.holiday" title="put hours"[(ngModel)]="hd.hours" [ngModelOptions]="{standalone:true}" [class]="hd.weekend?'cell-style-weekend':'cell-style-holidayline'"[disabled]="true" type="number" >
+                                <input *ngIf="hd.holiday" title="put hours"[(ngModel)]="hd.hours" [ngModelOptions]="{standalone:true}" class="cell-style-holiday-active"[disabled]="!hd.holiday" type="number" >                
                             </td>
                         </tr>
                     </tbody>

@@ -11,6 +11,11 @@ import { FaradjaTimesheetComponent } from './components/faradja-timesheet/faradj
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { TsUserComponent } from './components/ts-user/ts-user.component';
 import { AppHttpInterceptor } from './interceptors/app-http.interceptor';
+import { UsersComponent } from './components/users/users.component';
+import { HolidaysComponent } from './components/holidays/holidays.component';
+import { AdminsComponent } from './components/admins/admins.component';
+import { AccessDeniedComponent } from './components/access-denied/access-denied.component';
+import { EmployeesComponent } from './components/employees/employees.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +24,12 @@ import { AppHttpInterceptor } from './interceptors/app-http.interceptor';
     LoginComponent,
     FaradjaTimesheetComponent,
     NavbarComponent,
-    TsUserComponent
+    TsUserComponent,
+    UsersComponent,
+    HolidaysComponent,
+    AdminsComponent,
+    AccessDeniedComponent,
+    EmployeesComponent
   ],
   imports: [
     BrowserModule,
@@ -27,6 +37,7 @@ import { AppHttpInterceptor } from './interceptors/app-http.interceptor';
     FormsModule,
     ReactiveFormsModule, 
     HttpClientModule
+    
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AppHttpInterceptor, multi:true }

@@ -112,6 +112,9 @@ export class FaradjaTimesheetComponent implements OnInit{
   deleteTimesheet(){
     
   }
+  checkContent(hours:number){
+    
+  }
 
   
   

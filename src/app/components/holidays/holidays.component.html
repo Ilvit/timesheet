@@ -1,0 +1,95 @@
+<h4 class="faradja-bg2 text-light  text-center ">{{title}} </h4>
+<div class="row p-2  ">
+    <div class="row col-12 ">
+        <div class="card col-7 mt-sm-1 ">
+            <ng-container *ngIf="holidays|async as result" [ngSwitch]="result.dataState">
+                <ng-container *ngSwitchCase="DataStateEnum.ERROR">
+                    <span class="alert-danger text-center ">{{result.errorMessage}} </span>
+                </ng-container>
+                <ng-container *ngSwitchCase="DataStateEnum.LOADING">
+                    <span class="text-success text-center ">
+                        LOADING.....
+                    </span>
+                </ng-container>
+                <ng-container *ngSwitchCase="DataStateEnum.LOADED">
+                    <table class="table  table-striped  ">
+                        <thead>
+                            <th>ID</th><th>Date</th><th>Description</th>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let hd of result.hdays">
+                                <td>{{hd.id}} </td><td><button class="btn" (click)="describe(hd)">{{hd.date | date:'EEEE dd-MMMM-yyyy' }}</button> </td><td><button class="btn" (click)="describe(hd)">{{hd.description}}</button> </td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning " (click)="editHoliday(hd)"><i class="bi bi-pencil-fill"></i> </button>    
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-danger "(click)="deleteHoliday(hd)"><i class="bi bi-trash-fill"></i> </button>    
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </ng-container>
+            </ng-container>
+            
+        </div>
+        <div class="card col-4 p-2  ">
+            <ng-container [ngSwitch]="holidayStateEnum" >
+                <ng-container *ngSwitchCase="HolidayStateEnum.NONE">
+                    <h2 class="text-center text-primary ">WELCOME </h2>
+                </ng-container>
+                <ng-container *ngSwitchCase="HolidayStateEnum.EDIT">
+                    <div class="mt-2 card ">
+                        <div class="card-header ">EDIT THE HOLIDAY</div>
+                        <div class="card-body">
+                            <form [formGroup]="editFormGroup" (ngSubmit)="updateHoliday()">
+                                <div class="input-group ">
+                                    <label class="form-control " for="i_date">Date</label>
+                                    <input type="date" class="input-group-text " id="i_date" formControlName="date">
+                                </div>
+                                <div class="input-group ">
+                                    <label class="form-control" for="i_description">Describe</label>
+                                    <input type="text" class="input-group-text " id="i_description" formControlName="description" >
+                                </div>
+                                <div class="input-group mt-2 ">
+                                    <button class="btn btn-success " type="submit">Validate</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="HolidayStateEnum.ADDNEW">
+                    <div class="mt-2 card ">
+                        <div class="card-header ">ADD A NEW HOLIDAY</div>
+                        <div class="card-body">
+                            <form [formGroup]="editFormGroup" (ngSubmit)="saveHoliday()">
+                                <div class="input-group ">
+                                    <label class="form-control " for="i_date">Date</label>
+                                    <input type="date" class="input-group-text " id="i_date" formControlName="date">
+                                </div>
+                                <div class="input-group ">
+                                    <label class="form-control" for="i_description">Describe</label>
+                                    <input type="text" class="input-group-text " id="i_description" formControlName="description" >
+                                </div>
+                                <div class="input-group mt-2 ">
+                                    <button class="btn btn-primary " type="submit">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="HolidayStateEnum.READ">
+                    <h3 class="text-center text-dark justify-content-center  ">{{description}} </h3 >
+                </ng-container>
+            </ng-container>
+        </div>
+        <div class="col-1 ">
+            <div class="p-2  ">
+                <button class="btn btn-success " title="Add a new holiday" (click)="addNewHoliday()">
+                   new Holiday 
+                   <i class="bi bi-plus-circle"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+</div>
