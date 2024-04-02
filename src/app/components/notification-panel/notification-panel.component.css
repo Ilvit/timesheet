@@ -1,0 +1,9 @@
+.v-center{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
+.faradja-bg2{
+    background-color: rgb(17, 17, 80);
+}

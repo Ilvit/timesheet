@@ -3,30 +3,90 @@ export interface TimesheetDTO{
     timesheet:Timesheet;
     timesheetsPeriods:Array<string>;
     timesheetPeriod:string;
-    businessDaysPresent:boolean;
-    holidaysPresent:boolean;
-    weekendDaysPresent:boolean;
-    loaded:boolean
+    periodDates:Array<Date>;
+    periodStates:PeriodState[];
+    regularDaysPresent:boolean;
+    vacationDaysPresent:boolean;
+    holidaysPresent:boolean;    
+    rdProjects:Array<string>;
+    hdProjects:Array<string>;
+    vdProjects:Array<string>;
+    allProjects:Array<string>;
+    notificationRequest:NotificationRequest;
+
 }
 export interface Timesheet{
     employeeID: string;
     period:string;
     signed:boolean;
+    signable:boolean;
     approved:boolean;
-    newTimesheet:boolean;
+    approvedByCOP:boolean;
+    approvable:boolean;
+    ok:boolean;
+    rejected:boolean;
+    hasNewCreated:boolean;
     totalHours:number;
-    weekendTotalHours:number;
     holidaysTotalHours:number;
-    businessTotalHours:number;
-    verticalTotalHours:DayHours[];
-    businessDaysLine:Sheetday[];
-    holidaysLine:Sheetday[];
-    weekendDaysLine:Sheetday[]
+    regularTotalHours:number;
+    vacationTotalHours:number;
+    verticalTotalHoursList:DayHours[];
+    regularDaysLine:Array<Sheetday>;
+    holidaysLine:Array<Sheetday>;
+    vacationDaysLine:Array<Sheetday>;
+    rdTotalHoursByLine:Map<string,number>;
+    hdTotalHoursByLine:Map<string,number>;
+    vdTotalHoursByLine:Map<string,number>;
 }
+export interface TimesheetSaver{
+
+}
+export interface TimesheetState{
+    periodStates:PeriodState[];
+    employee:Employee;
+    supervisor:Employee;
+    currentPeriod:string;
+    canAddNewTimesheet:boolean;
+    timesheetExists:boolean;
+    timesheetPeriodExists:boolean;
+    usersPeriods:string[]
+}
+export interface PeriodState{
+    period:string;
+    finished:boolean;
+    approved:boolean;
+    timesheetOk:boolean;
+}
+
 export interface TimesheetPeriods{
     year:number;
     periods:Array<string>;
     currentPeriod:string
+}
+export interface Notification{
+    id:number;
+    sender:Employee;
+    msgTo:string;
+    msgObject:string;
+    msgBody:string;
+    instant:Date;
+    period:string;
+    read:boolean;
+    idTobeTransferred:string;
+}
+export interface NotificationRequest{
+    msgObject:string;
+    msgBody:string;
+}
+export interface NotificationResponseDTO{
+    receiver:Employee;
+    copID:string;
+    notifications:Notification[];
+    pageSize:number;
+    totalPages:number;
+    currentPage:number;
+    totalNotifOnPage:number;
+    pagesArray:number[]
 }
 export interface Sheetday{
     id:number;
@@ -36,7 +96,9 @@ export interface Sheetday{
     signed:boolean;
     approuved:boolean;
     holiday:boolean;
+    rejected:boolean;
     weekend:boolean;
+    projectName:string;
     dayType:string
 }
 export interface Employee{
@@ -45,7 +107,7 @@ export interface Employee{
     postName:string;
     nickName:string;
     mail:string;
-    phoneNumber:string
+    phoneNumber:string;
     gender:Gender;
     position:Position;
     supervisorID:string
@@ -74,6 +136,7 @@ export interface UserRoles{
     roleName:string;
     hasRole:boolean;
 }
+
 export enum Gender{
     MALE, FEMALE, OTHER
 }

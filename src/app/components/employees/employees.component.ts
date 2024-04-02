@@ -17,8 +17,8 @@ export class EmployeesComponent implements OnInit {
   readonly DataStateEnum=DataStateEnum;
   readonly EmployeeStateEnum=EmployeeStateEnum;
   employeeStateEnum!:EmployeeStateEnum;
-  genders=Object.values(Gender)
-  positions=Object.values(Position);
+  genders=Object.values(Gender).filter(v=>isNaN(Number(v)));
+  positions=Object.values(Position).filter(v=>isNaN(Number(v)));
 
   constructor(public timesheetService:FtimesheetService, private fb:FormBuilder){}
 

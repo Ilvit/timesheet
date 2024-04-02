@@ -1,32 +1,59 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AppUser, Employee, Holiday, TimesheetDTO,  } from '../models/timesheet.model';
+import { AppUser, Employee, Holiday, Notification, NotificationRequest, NotificationResponseDTO, TimesheetDTO, TimesheetState,  } from '../models/timesheet.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FtimesheetService {
 
+  uPer!:string; 
+  uEid!:string;
+  sEid!:string;
+  notifFrom!:Employee
+  supervised!:boolean
+
  // host="https://timesheetf.onrender.com/";
   host="http://localhost:8081/";
 
   constructor(private http:HttpClient) { }
 
+  public getTimesheetState(employeeID:string){
+    return this.http.get<TimesheetState>(this.host+`timesheet/timesheetstate?eid=${employeeID}`);
+  }
   public getTimesheet(period:string, employeeID:string){
-    return this.http.get<TimesheetDTO>(this.host+`timesheet?period=${period}&eid=${employeeID}`);
+    return this.http.get<TimesheetDTO>(this.host+`timesheet?per=${period}&eid=${employeeID}`);
+  }
+  public getNewTimesheet(employeeID:string){
+    return this.http.get<TimesheetDTO>(this.host+`timesheet/newtimesheet?eid=${employeeID}`);
   }
 
-  public getNewTimesheetLine(period:string, employeeID:string, daysCode:string){
-    return this.http.get<TimesheetDTO>(this.host+`timesheet/newline?per=${period}&eid=${employeeID}&dc=${daysCode}`);
+  public getNewTimesheetLine(period:string, projectName:string, employeeID:string, daysCode:string){
+    return this.http.get<TimesheetDTO>(this.host+`timesheet/newline?per=${period}&eid=${employeeID}&dc=${daysCode}&proj=${projectName}`);
   }
   public saveTimesheet(period:string, timesheetDTO:TimesheetDTO){
     return this.http.post<TimesheetDTO>(this.host+`timesheet/save?per=${period}`, timesheetDTO);
   }
+  public signTimesheet(employeeID:string, period:string){
+    return this.http.get<boolean>(this.host+`timesheet/sign?eid=${employeeID}&per=${period}`);
+  }
+  public approveTimesheet(period:string, employeeID:string, supervisorID:string, notificationRequest:NotificationRequest){
+    return this.http.post<boolean>(this.host+`timesheet/approve?per=${period}&eid=${employeeID}&sid=${supervisorID}`, notificationRequest);
+  }
+  public rejectTimesheet(period:string, employeeID:string, supervisorID:string, notificationRequest:NotificationRequest){
+    return this.http.post<boolean>(this.host+`timesheet/reject?per=${period}&eid=${employeeID}&sid=${supervisorID}`, notificationRequest);
+  }
+  public copApproveTimesheet(period:string, employeeID:string, notificationRequest:NotificationRequest){
+    return this.http.post<boolean>(this.host+`timesheet/copapprove?per=${period}&eid=${employeeID}`, notificationRequest);
+  }
   public deleteTimesheet(period:string, employeeID:string){
-    return this.http.delete<boolean>(this.host+`timesheet/deleteline?per=${period}&eid=${employeeID}`);
+    return this.http.delete<TimesheetDTO>(this.host+`timesheet/deleteline?per=${period}&eid=${employeeID}`);
   }
   public deleteTimesheetLine(period:string, employeeID:string, daysCode:string){
-    return this.http.delete<boolean>(this.host+`timesheet/deleteline?per=${period}&eid=${employeeID}&dc=${daysCode}`);
+    return this.http.delete<TimesheetDTO>(this.host+`timesheet/deleteline?per=${period}&eid=${employeeID}&dc=${daysCode}`);
+  }
+  public deleteProjectTimesheetLine(period:string, projectName:string, employeeID:string, daysCode:string){
+    return this.http.delete<TimesheetDTO>(this.host+`timesheet/deleteprojectline?per=${period}&proj=${projectName}&eid=${employeeID}&dc=${daysCode}`);
   }
   public getHolidays(){
     return this.http.get<Holiday[]>(this.host+`timesheet/holidays`);
@@ -82,6 +109,19 @@ export class FtimesheetService {
   }
   public updateUser(user:AppUser){
     return this.http.put<AppUser[]>(this.host+`timesheet/users/update`, user);
+  }
+
+  public getAllNotifications(ofEmployeeID:string){
+    return this.http.get<Notification[]>(this.host+`timesheet/notifications?eid=${ofEmployeeID}`);
+  }
+  public getSupervisorNotifications(period:string, receiverID:string, senderID:string){
+    return this.http.get<Notification[]>(this.host+`timesheet/notifications/supnotifs?per=${period}&eid=${receiverID}&sid=${senderID}`);
+  }
+  public getNotification(notifID:number){
+    return this.http.get<Notification>(this.host+`timesheet/notifications/notification?nid=${notifID}`);
+  } 
+  public getNotifications(receiverID:string, page:number){
+    return this.http.get<NotificationResponseDTO>(this.host+`timesheet/notifications/notifs?eid=${receiverID}&p=${page}`);
   }
 }
  

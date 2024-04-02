@@ -12,13 +12,17 @@ import { AccessDeniedComponent } from './components/access-denied/access-denied.
 import { AuthorizationGuard } from './guards/authorization.guard';
 import { AdminAuthGuard } from './guards/admin-auth.guard';
 import { EmployeesComponent } from './components/employees/employees.component';
+import { NotificationPanelComponent } from './components/notification-panel/notification-panel.component';
+import { TimesheetPanelComponent } from './components/timesheet-panel/timesheet-panel.component';
 
 const routes: Routes = [
   {path:"", redirectTo:"/login", pathMatch:'full'},
   {path:"login", component:LoginComponent},  
   {path:"user", component:TsUserComponent, canActivate:[AuthenticationGuard], children:[
     {path:"ftimesheet", component:FaradjaTimesheetComponent},
+    {path:"notifications", component:NotificationPanelComponent},    
     {path:"home", component:HomeComponent},
+    {path:"tspanel", component:TimesheetPanelComponent},
     {path:"accessDenied", component:AccessDeniedComponent}
   ]},
   {path:"admins", component:AdminsComponent, canActivate:[AuthorizationGuard], children:[

@@ -40,6 +40,13 @@
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
+        <ul class="navbar-nav ms-2 ">
+          <li>
+            <button (click)="gotoNotifications()" matBadge="+" class="btn btn-sm btn-info"matBadgeSize="small"  matBadgeColor="accent">
+              <i class="bi bi-bell-fill"></i>
+            </button>
+          </li>
+        </ul>
         <ul class="navbar-nav ms-2  me-2 ">
           <li class="nav-item dropdown ">            
             <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

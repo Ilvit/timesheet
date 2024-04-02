@@ -21,10 +21,10 @@
                                 <tr *ngFor="let e of result.employs">
                                     <td>{{e.id}} </td><td><button class="btn" (click)="describe(e)">{{e.name+' '+e.postName+' '+e.nickName}}</button> </td><td><button class="btn" (click)="describe(e)">{{e.mail}}</button> </td>
                                     <td>
-                                        <button class="btn btn-sm btn-warning " (click)="editEmployee(e)"><i class="bi bi-pencil-fill"></i> </button>    
+                                        <button title="edit" class="btn btn-sm btn-warning " (click)="editEmployee(e)"><i class="bi bi-pencil-fill"></i> </button>    
                                     </td>
                                     <td>
-                                        <button class="btn btn-sm btn-danger " (click)="deleteEmployee(e)"><i class="bi bi-trash-fill"></i> </button>    
+                                        <button title="delete the employee" class="btn btn-sm btn-danger " (click)="deleteEmployee(e)"><i class="bi bi-trash-fill"></i> </button>    
                                     </td>
                                 </tr>
                             </tbody>
@@ -44,6 +44,10 @@
                         <div class="card-header ">EDIT THE EMPLOYEE</div>
                         <div class="card-body ">
                             <form [formGroup]="employeeFormGroup" (ngSubmit)="updateEmployee()">
+                                <div class="input-group mt-1">
+                                    <label class="input-group-text " for="i_id">ID</label>
+                                    <input type="text" class="form-control " id="i_id" formControlName="id">
+                                </div>
                                 <div class="input-group mt-1">
                                     <label class="input-group-text " for="i_name">Name</label>
                                     <input type="text" class="form-control " id="i_name" formControlName="name">
@@ -80,7 +84,7 @@
                                 </div>
                                 <div class="input-group mt-1  ">
                                     <label class="input-group-text" for="i_seid">Supervisor-ID</label>
-                                    <input type="text" class="form-control-sm  " maxlength="8" id="i_seid" formControlName="supervisorID" >
+                                    <input type="text" class="form-control-sm  " maxlength="10" id="i_seid" formControlName="supervisorID" >
                                 </div>
                                 <div class="input-group mt-2 ">
                                     <button class="btn btn-dark " type="submit">Save</button>
@@ -130,7 +134,7 @@
                                 </div>
                                 <div class="input-group mt-1  ">
                                     <label class="input-group-text" for="i_seid">Supervisor-ID</label>
-                                    <input type="text" class="form-control-sm  " maxlength="8" id="i_seid" formControlName="supervisorID" >
+                                    <input type="text" class="form-control-sm  " maxlength="10" id="i_seid" formControlName="supervisorID" >
                                 </div>
                                 <div class="input-group mt-2 ">
                                     <button class="btn btn-dark " type="submit">Save</button>

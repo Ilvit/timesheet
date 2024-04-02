@@ -1,7 +1,8 @@
+import { KeyValuePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Observable, catchError, map, of, startWith } from 'rxjs';
-import { AppDataState, DataStateEnum, TimesheetDTO } from 'src/app/models/timesheet.model';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Observable, catchError, map, max, of, startWith } from 'rxjs';
+import { AppDataState, DataStateEnum, PeriodState, TimesheetDTO, TimesheetState } from 'src/app/models/timesheet.model';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { FtimesheetService } from 'src/app/services/ftimesheet.service';
 
@@ -12,111 +13,170 @@ import { FtimesheetService } from 'src/app/services/ftimesheet.service';
 })
 export class FaradjaTimesheetComponent implements OnInit{
 
-  timesheetDTO?:Observable<AppDataState<TimesheetDTO>>|null;
   readonly DataStateEnum=DataStateEnum;
-  tsDTO?:TimesheetDTO;
+  tsDTO!:TimesheetDTO;
   period!:string;
-
+  timesheetState!:TimesheetState
+  periodStates!:PeriodState[];
+  activeTimesheetState:boolean=false;
+  
   constructor(private timesheetService:FtimesheetService, private fb:FormBuilder, public authService:AuthenticationService){}
 
-  ngOnInit(): void {    
-    this.getTimesheet();
-
+  ngOnInit(): void {        
+    this.getTimesheetState();    
+  }
+  getTimesheetState(){
+    this.timesheetService.getTimesheetState(this.authService.employeeID).subscribe({
+      next:data=>{
+        this.activeTimesheetState=true;    
+        this.timesheetState=data;     
+        this.periodStates=data.periodStates;      
+      }, error:err=>alert(err)
+    })
   }
   getTimesheet(){
-    this.timesheetDTO=this.timesheetService.getTimesheet("",this.authService.employeeID).pipe(
-      map(data=>({dataState:DataStateEnum.LOADED,timesheetDto:data})),
-      startWith({dataState:DataStateEnum.LOADING}),
-      catchError(err=>of({dataState:DataStateEnum.ERROR, errorMessage:err.message}))
-    );
-    this.timesheetDTO.subscribe({
+    this.timesheetService.getTimesheet(this.period,this.authService.employeeID).subscribe({
       next:data=>{
-        this.tsDTO=data.timesheetDto;
-      }
+        this.tsDTO=data;
+        this.activeTimesheetState=false;
+        this.period=data.timesheetPeriod;       
+        
+      }, error:err=>alert(err)
+    })
+  }
+  getTimesheetByPeriod(per:string){
+    this.timesheetService.getTimesheet(per, this.authService.employeeID).subscribe({
+      next:data=>{
+        this.activeTimesheetState=false; 
+        this.tsDTO=data;
+        this.period=data.timesheetPeriod;      
+       
+      }, error:err=>alert(err)
     })
   }
   getNewHolidaysLine(){    
-    this.timesheetDTO=this.timesheetService.getNewTimesheetLine("",this.authService.employeeID,"PUBHDCH-24").pipe(
-      map(data=>({dataState:DataStateEnum.LOADED,timesheetDto:data})),
-      startWith({dataState:DataStateEnum.LOADING}),
-      catchError(err=>of({dataState:DataStateEnum.ERROR, errorMessage:err.message}))
-    );
-    this.timesheetDTO.subscribe({
-      next:data=>{
-        this.tsDTO=data.timesheetDto;
-      }
-    })
+    let selPro=(document.getElementById("selpro2") as HTMLSelectElement).value;
+    if(this.tsDTO?.hdProjects.includes(selPro)){
+      alert("A holiday timesheetline exists for "+selPro+" project");
+    }else {
+      this.timesheetService.getNewTimesheetLine(this.period,selPro, this.authService.employeeID,"PUBHDCH-24").subscribe({
+        next:data=>{
+          this.tsDTO=data;
+        }
+      })
+    }    
+  }  
+  getNewRegularDaysLine(){
+    let selPro=(document.getElementById("selpro") as HTMLSelectElement).value;
+    if(this.tsDTO?.rdProjects.includes(selPro)){
+      alert("A regular day timesheetline exists for "+selPro+" project");
+    }else{      
+      this.timesheetService.getNewTimesheetLine(this.period, selPro ,this.authService.employeeID,"BUSDCH-24").subscribe({
+        next:data=>{
+          this.tsDTO=data;          
+        },error:err=>alert("there is an error")
+      })
+    }   
   }
-  getNewWeekendDaysLine(){
-    this.timesheetDTO=this.timesheetService.getNewTimesheetLine("",this.authService.employeeID,"WEEDCH-24").pipe(
-      map(data=>({dataState:DataStateEnum.LOADED,timesheetDto:data})),
-      startWith({dataState:DataStateEnum.LOADING}),
-      catchError(err=>of({dataState:DataStateEnum.ERROR, errorMessage:err.message}))
-    );
-    this.timesheetDTO.subscribe({
-      next:data=>{
-        this.tsDTO=data.timesheetDto;
-      }
-    })
-  }
-  getNewBusinessDaysLine(){
-    this.timesheetDTO=this.timesheetService.getNewTimesheetLine("",this.authService.employeeID,"BUSDCH-24").pipe(
-      map(data=>({dataState:DataStateEnum.LOADED,timesheetDto:data})),
-      startWith({dataState:DataStateEnum.LOADING}),
-      catchError(err=>of({dataState:DataStateEnum.ERROR, errorMessage:err.message}))
-    );
-    this.timesheetDTO.subscribe({
-      next:data=>{
-        this.tsDTO=data.timesheetDto;
-      }
-    })
+  getNewVacationDaysLine(){
+    let selPro=(document.getElementById("selpro3") as HTMLSelectElement).value;
+    if(this.tsDTO.vdProjects.includes(selPro)){
+      alert("vacation-days timesheetline exists for "+selPro+" project");
+    }else{
+      this.timesheetService.getNewTimesheetLine(this.period, selPro ,this.authService.employeeID,"VACDCH-24").subscribe({
+        next:data=>{
+          this.tsDTO=data;
+        },error:err=>alert("there is an error")
+      })
+    }   
   }
   
-  deletePublicHolidayLine(){
-    if(confirm("DO YOU WANT TO DELETE THIS TIMESHEET LINE ?")){
+  deleteHolidaysLine(){
+    if(confirm("Do you want to delete Holidays of all the projects ?")){
       this.timesheetService.deleteTimesheetLine(this.period, this.authService.employeeID,"PUBHDCH-24").subscribe({
         next:data=>{          
-          this.getTimesheet();
+          this.tsDTO=data;
         }
       })
     }    
   }
-  deleteBusinessDayLine(){
-    if(confirm("DO YOU WANT TO DELETE THIS TIMESHEET LINE ?")){
+  deleteRegularDaysLine(){
+    if(confirm("Do you want to delete Regular-days of all the projects ?")){
       this.timesheetService.deleteTimesheetLine(this.period, this.authService.employeeID,"BUSDCH-24").subscribe({
-        next:data=>{
-          this.getTimesheet();
+        next:data=>{          
+          this.tsDTO=data;
         }
       })
     }    
   }
-
-  deleteWeekendDayLine(){
-    if(confirm("DO YOU WANT TO DELETE THIS TIMESHEET LINE ?")){
-      this.timesheetService.deleteTimesheetLine(this.period, this.authService.employeeID,"WEEDCH-24").subscribe({
-        next:data=>{
-          this.getTimesheet();
+  deleteVacationDaysLine(){
+    if(confirm("Do you want to delete Vacation-days of all the projects ?")){
+      this.timesheetService.deleteTimesheetLine(this.period, this.authService.employeeID,"VACDCH-24").subscribe({
+        next:data=>{          
+          this.tsDTO=data;
         }
       })
     }    
   }
-  saveTimesheet() {
-     this.timesheetService.saveTimesheet(this.period, this.tsDTO!).subscribe({
+  deleteProjectRegularDaysLine(projectName:string){
+    if(confirm("DO you want to delete the "+projectName+" PROJECT Regular timesheet-line ?")){
+      this.timesheetService.deleteProjectTimesheetLine(this.period, projectName, this.authService.employeeID,"BUSDCH-24").subscribe({
+        next:data=>{
+          this.tsDTO=data;
+        }
+      })
+    }    
+  }
+  deleteProjectVacationDaysLine(projectName:string){
+    if(confirm("DO you want to delete the "+projectName+" PROJECT Vacation timesheet-line ?")){
+      this.timesheetService.deleteProjectTimesheetLine(this.period, projectName, this.authService.employeeID,"VACDCH-24").subscribe({
+        next:data=>{
+          this.tsDTO=data;
+        }
+      })
+    }    
+  }
+  deleteProjectHolidaysLine(projectName:string){
+    if(confirm("Do you want to delete the "+projectName+" PROJECT Holiday timesheet-line ?")){
+      this.timesheetService.deleteProjectTimesheetLine(this.period, projectName, this.authService.employeeID,"PUBHDCH-24").subscribe({
+        next:data=>{
+          this.tsDTO=data;
+        }
+      })
+    }    
+  }
+  getNewTimesheet(){
+    this.timesheetState.canAddNewTimesheet=false;
+    this.timesheetService.getNewTimesheet(this.authService.employeeID).subscribe({
       next:data=>{
+        this.activeTimesheetState=false;        
         this.tsDTO=data;
+        this.period=data.timesheetPeriod;
+        this.periodStates=data.periodStates;
+      }, error:err=>{
+        alert("Can not load timesheet");
       }
-    })    
-  }
-      
+    })
+  } 
+
+  saveTimesheet() {
+    this.timesheetService.saveTimesheet(this.period, this.tsDTO!).subscribe({
+      next:data=>{ 
+        this.tsDTO=data;
+        this.period=data.timesheetPeriod;
+      },error:err=>alert(err)
+    }) 
+  }      
 
   deleteTimesheet(){
     
   }
-  checkContent(hours:number){
-    
-  }
+  signTimesheet(){
+    this.timesheetService.signTimesheet(this.authService.employeeID,this.period).subscribe({
+      next:data=>{
+        this.tsDTO.timesheet.signed=data;
+      },error:err=>alert("Not signed")
+    })
+  }   
 
-  
-  
-  
 }

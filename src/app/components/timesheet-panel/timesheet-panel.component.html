@@ -1,0 +1,185 @@
+<div class="p-2 ">
+    <div class="row col-12 overflow-auto  ">
+
+        <div class="card mt-3 mb-3 col-8 offset-2 ts-bg3">
+            <div class=" v-center mt-1 mb-1 ">
+                <span class="ms-2 me-1 "> Name</span> <button class="btn btn-info btn-sm text-white ">{{tsDTO.employee.name+' '+tsDTO.employee.postName+' '+tsDTO.employee.nickName}} </button>
+                <span class="ms-2 me-1 "> ID</span> <button class="btn btn-info btn-sm text-white ">{{tsDTO.employee.id}} </button>
+                <span class="ms-2 me-1 "> Period</span> <button class="btn btn-info btn-sm text-white ">{{tsDTO.timesheetPeriod}} </button>
+                <span class="ms-2 me-1 "> Status</span> <button class="btn btn-success btn-sm text-white ">Signed </button>
+                <button *ngIf="tsDTO.timesheet.approved" class="btn btn-success btn-sm text-white ms-1 ">Approved </button>                
+            </div>
+        </div>
+        <div *ngIf="authService.roles.includes('COP')" class="col-2 v-center">
+            <button class="btn btn-danger btn-sm "(click)="rejectApprovedTimesheet()"
+                [disabled]="!tsDTO.timesheet.approved || tsDTO.timesheet.rejected">Reject the approved timesheet
+            </button>
+            <button class="btn btn-success btn-sm ms-1 "(click)="copApproveTimesheet()"
+                [disabled]="!tsDTO.timesheet.approved ||tsDTO.timesheet.approvedByCOP || tsDTO.timesheet.rejected">Approve the approved timesheet
+            </button>
+        </div>
+        <div class="card col-8 overflow-auto ">
+            <div *ngIf="tsDTO" class="card-body">
+                <div class="horiz-bar">
+                    <div class="ts-dashbord-bg2  ">
+                        <span class=" me-5 ">REGULAR DAYS TIMESHEET-LINE </span>                                                                    
+                    </div>
+                    <!-- The table header-->
+                    <div >
+                        <table class="ts-bg table-bordered table-responsive  ">
+                            <thead class="theader-bg-color" >                                    
+                                <th *ngFor="let d of tsDTO.periodDates" class="cell-style2">
+                                    <span >{{d|date:'EE'}} </span><br>
+                                    <span >{{d|date:'dd-MMM'}} </span>
+                                </th>
+                                <th  *ngIf="tsDTO?.periodDates"><input type="text" class="cell-tvh bg-primary"[disabled]="true"></th>
+                            </thead>
+                            <tbody class=" ts-bg2" *ngFor="let rdpro of tsDTO.rdProjects">
+                                <tr>
+                                    <td colspan="17" class="mt-2 text-success bg-white ">Project: {{rdpro}}</td>
+                                </tr> 
+                                <tr >                                                 
+                                    <td *ngFor="let d of tsDTO?.periodDates ">   
+                                        <span *ngFor="let rd of tsDTO?.timesheet?.regularDaysLine">
+                                            <input *ngIf="rd.projectName==rdpro && rd.date==d" [(ngModel)]="rd.hours" [ngModelOptions]="{standalone:true}"value="{{rd.hours}}"
+                                                [class]="rd.holiday?'cell-style-holiday':(rd.weekend?'cell-style-weekend':'cell-style')" type="number"
+                                                min="0" [max]="(rd.date|date:'EE')=='Fri'?4:9" [disabled]="true">                                                       
+                                        </span>    
+                                    </td>
+                                    <td>
+                                        <span *ngFor="let thl of tsDTO?.timesheet?.rdTotalHoursByLine|keyvalue">
+                                            <input *ngIf="rdpro==thl.key" type="text" class="cell-tvh" value="{{thl.value}}"[disabled]="true">
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>                                                        
+                    </div>   
+
+                     <!-- We display holidays of all the existing projects -->
+                     <div class="ts-dashbord-bg2 mt-3">
+                        <span class=" me-5">HOLIDAYS TIMESHEET-LINE </span>       
+                    </div>
+
+                     <div>
+                        <table class="ts-bg table-bordered table-responsive   ">
+                            <thead class="theader-bg-color" >                                    
+                                <th *ngFor="let d of tsDTO?.periodDates" class="cell-style2"></th>
+                            </thead>
+                            <tbody class=" ts-bg2" *ngFor="let hdpro of tsDTO.hdProjects">
+                                <tr>
+                                    <td colspan="17" class="mt-2 text-success bg-white ">Project: {{hdpro}}</td>
+                                </tr>
+                                <tr >                                                 
+                                    <td class="td-bg-style" *ngFor="let d of tsDTO?.periodDates ">   
+                                        <span *ngFor="let hd of tsDTO?.timesheet?.holidaysLine">
+                                            <span *ngIf="hd.projectName==hdpro&&hd.date==d"> 
+                                                <input type="number" [(ngModel)]="hd.hours" [ngModelOptions]="{standalone:true}"
+                                                    [class]="hd.holiday?'cell-style-holiday-active':(hd.weekend?'cell-style-weekend':'cell-style-holidayline')" type="number"
+                                                    min="0" [max]="(hd.date|date:'EE')=='Fri'?4:9" [disabled]="true">
+                                            </span>                                                        
+                                        </span>   
+                                    </td>
+                                    <td >
+                                        <span *ngFor="let th of tsDTO?.timesheet?.hdTotalHoursByLine|keyvalue">
+                                            <input *ngIf="hdpro==th.key" type="text" class="cell-tvh" value="{{th.value}}"[disabled]="true">
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                    </div>
+                    <!-- We display vacationDaysLines of all the existing projects -->
+                    <div class="ts-dashbord-bg2 mt-3">
+                        <span class=" me-5">VACATION TIMESHEET-LINE </span> 
+                     </div>  
+                     <div>
+                         <table class="ts-bg table-bordered table-responsive   ">
+                             <thead class="theader-bg-color" >                                    
+                                 <th *ngFor="let d of tsDTO.periodDates" class="cell-style2"></th>
+                             </thead>
+                             <tbody class=" ts-bg2" *ngFor="let vdpro of tsDTO.vdProjects">
+                                 <tr>
+                                     <td colspan="17" class="mt-2 text-success bg-white ">Project: {{vdpro}}</td>
+                                 </tr>
+                                 <tr >                                                 
+                                     <td class="td-bg-style" *ngFor="let d of tsDTO.periodDates ">   
+                                         <span *ngFor="let vd of tsDTO.timesheet.vacationDaysLine">
+                                             <span *ngIf="vd.projectName==vdpro&&vd.date==d"> 
+                                                 <input type="number" [(ngModel)]="vd.hours" [ngModelOptions]="{standalone:true}"
+                                                     [class]="vd.holiday?'cell-style-holiday-active':(vd.weekend?'cell-style-weekend':'cell-style-vacationdayline')" type="number"
+                                                     min="0" [max]="(vd.date|date:'EE')=='Fri'?4:9" [disabled]="(vd.weekend||tsDTO.timesheet.signed)?true:false" minlength="0" maxlength="1">
+                                             </span>                                                        
+                                         </span>   
+                                     </td>
+                                     <td >
+                                         <span *ngFor="let th of tsDTO.timesheet.vdTotalHoursByLine|keyvalue">
+                                             <input *ngIf="vdpro==th.key" type="text" class="cell-tvh" value="{{th.value}}"[disabled]="true">
+                                         </span>
+                                     </td>
+                                 </tr>
+                             </tbody>
+                         </table>
+                         <!--Totaux verticaux-->   
+                         <table class="ts-bg table-bordered table-responsive mt-5  ">
+                             <thead class="theader-bg-color" >                                    
+                                 <th *ngFor="let d of tsDTO.periodDates" class="cell-style2"></th>
+                             </thead>
+                             <tbody>
+                                 <tr>
+                                     <td *ngFor="let vth of tsDTO.timesheet.verticalTotalHoursList">
+                                         <input type="text" class="cell-style vth-txt"[disabled]="true" value="{{vth.totalHours}}">
+                                     </td>
+                                     <td *ngIf="tsDTO.timesheet.totalHours"><input type="text" class="cell-tvh" value="{{tsDTO.timesheet.totalHours}}"[disabled]="true" > </td>
+                                 </tr>
+                             </tbody>
+                         </table>
+                     </div> 
+                </div>
+            </div>
+        </div>
+        <div class="card col-4 panel-bg ">
+            <div *ngIf="!timesheetService.supervised" class="p-2 ">
+                <div class="card-header title-background-card">
+                    Response to {{tsDTO.employee.name+' '+tsDTO.employee.nickName}}
+                </div>
+                <div class="card-body bg-light ">
+                    <form [formGroup]="tsFormGroup">
+                        <div class="input-group ">
+                            <label class="input-group-text ts-bg3" for="i_obj">Object</label>
+                            <input type="text" class="form-control" placeholder="object" id="i_obj" formControlName="msgObject">
+                        </div>
+                        <div class="mt-2 mb-2">
+                            <textarea class="form-control " id="i_msg" cols="10" rows="5" placeholder="Comment your action " formControlName="msgBody"></textarea>
+                        </div>
+                        <button class="btn btn-success me-5" [disabled]="(!tsDTO.timesheet.approvable||tsDTO.timesheet.approved)?true:false" (click)="approveTimesheet()">Approve</button>
+                        <button class="btn btn-danger ms-5 " [disabled]="tsDTO.timesheet.approved||tsDTO.timesheet.rejected" (click)="rejectTimesheet()">Reject</button>
+                    </form>
+                </div>
+            </div>
+            <div *ngIf="timesheetService.supervised" class="p-2 ts-container-size overflow-y-auto " >
+                <div class="card  mt-2" *ngFor="let notif of notifications">
+                    <div class="mt-2 mb-2 ">
+                        <span class="bg-primary text-light ">Date</span>
+                        <span class="ms-2 ">{{notif.instant|date:'EE dd-MMM'}} </span><span class="ms-2 text-success ">{{notif.instant|date:'HH:mm:ss'}} </span>
+                    </div>
+                    <div class="mb-2 ">
+                        <span class="bg-primary text-light ">From</span>
+                        <span class="ms-2 text-success ">{{notif.sender.name+' '+notif.sender.postName+' '+notif.sender.nickName}} </span>
+                    </div>
+                    <div class="mb-2 ">
+                        <span class="bg-primary text-light ">Object</span>
+                        <span class="ms-2 text-success ">{{notif.msgObject}} </span>
+                    </div>
+                    <div class="mb-2 p-2  ">
+                        <textarea class="border-1 bg-light-subtle   " [disabled]="true" cols="45" >{{notif.msgBody}} </textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ts-bg3">
+
+    </div>
+</div>

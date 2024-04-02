@@ -16,6 +16,11 @@ import { HolidaysComponent } from './components/holidays/holidays.component';
 import { AdminsComponent } from './components/admins/admins.component';
 import { AccessDeniedComponent } from './components/access-denied/access-denied.component';
 import { EmployeesComponent } from './components/employees/employees.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatBadgeModule} from "@angular/material/badge";
+import { NotificationPanelComponent } from './components/notification-panel/notification-panel.component';
+import { ControlPanelComponent } from './components/control-panel/control-panel.component';
+import { TimesheetPanelComponent } from './components/timesheet-panel/timesheet-panel.component';
 
 @NgModule({
   declarations: [
@@ -29,15 +34,19 @@ import { EmployeesComponent } from './components/employees/employees.component';
     HolidaysComponent,
     AdminsComponent,
     AccessDeniedComponent,
-    EmployeesComponent
+    EmployeesComponent,
+    NotificationPanelComponent,
+    ControlPanelComponent,
+    TimesheetPanelComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule, 
-    HttpClientModule
-    
+    HttpClientModule, 
+    BrowserAnimationsModule,
+    MatBadgeModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AppHttpInterceptor, multi:true }

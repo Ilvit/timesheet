@@ -1,0 +1,53 @@
+<div class="card col-10 offset-1 p-2 mt-3 ">
+    <div class="faradja-bg2 text-light text-center"> My notifications</div>
+    <div *ngIf="!notificationResponseDTO" class="card-body v-center mt-2 ">
+        <div>Loading.... please wait....</div>
+    </div>
+    <div *ngIf="notificationResponseDTO" class="card-body row col-12  ">
+        <div class="col-9 overflow-y-auto card ">
+            <table class="table table-responsive table-sm table-striped ">
+                <thead>
+                    <th class="text-center ">Date</th><th class="text-center ">From</th><th class="text-center ">Object</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let notif of notificationResponseDTO.notifications">
+                        <td *ngIf="notif.sender.id!=authService.employeeID">
+                            <button class="btn btn-sm" (click)="getNotification(notif.id)">
+                                {{notif.instant|date:'EE dd-MMM-yyyy'}}
+                                <span class="text-primary ms-2"> {{notif.instant|date:' HH:mm:ss'}}</span>
+                            </button>
+                        </td>
+                        <td *ngIf="notif.sender.id!=authService.employeeID">
+                            <button class="btn btn-sm  "(click)="getNotification(notif.id)" >
+                                <span class="text-success me-2">{{notif.sender.position}} </span>{{notif.sender.name+' '+notif.sender.postName+' '+notif.sender.nickName}}
+                            </button>
+                        </td>
+                        <td *ngIf="notif.sender.id!=authService.employeeID">
+                            <button class="btn btn-sm "(click)="getNotification(notif.id)" >
+                                <span class="text-success">{{notif.msgObject}}</span>
+                            </button>
+                        </td>
+                        <td *ngIf="notif.sender.id!=authService.employeeID">
+                            <button class="btn btn-sm btn-info "(click)="seeTimesheet(notif.period, notif.sender, notif.idTobeTransferred)" >See the timesheet</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div>
+                <ul class="nav ">
+                    <li class="nav-item " *ngFor="let np of notificationResponseDTO.pagesArray">
+                        <a (click)="getNotifications(notificationResponseDTO.receiver.id, np)" [class]="np==notificationResponseDTO.currentPage?'btn btn-sm btn-info ms-1':'btn btn-sm btn-outline-info ms-1'">{{np}} </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card col-3 v-center">
+            <div class="p-2"*ngIf="notifDTO">
+                <div class=" text-center ">
+                    <span>{{notifDTO.msgBody}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
