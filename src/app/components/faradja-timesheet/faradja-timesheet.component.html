@@ -42,6 +42,10 @@
                     </button>
                 </div>
             </div>
+            <div class=" text-center tstate-size v-center" *ngIf="!tsDTO && timesheetState">
+                <span>LOADING....</span>
+                <span>PLEASE WAIT ....</span>
+            </div>
 
             <div *ngIf="tsDTO && !activeTimesheetState" class="card-body ">
                 <div class="horiz-bar">                    

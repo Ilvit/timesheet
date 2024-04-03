@@ -49,7 +49,15 @@ export interface TimesheetState{
     canAddNewTimesheet:boolean;
     timesheetExists:boolean;
     timesheetPeriodExists:boolean;
-    usersPeriods:string[]
+    usersPeriods:string[];
+    vacationReport:VacationReport;
+}
+export interface VacationReport{
+    totalHours:number
+    vacationHours:number
+    vacationDays:number
+    daysTaken:number
+    daysRemaining:number
 }
 export interface PeriodState{
     period:string;
