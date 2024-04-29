@@ -165,7 +165,7 @@ export enum Gender{
 }
 export enum Position{
     COP, DCOP, DRIVER, KPTA, DAF, CLEANER_KOLWEZI, SIM, IT,
-	SSI, LOG_SUPPLY_CHAIN, RECEPTIONIST, FINANCE_ASSOCIATE, FINANCE_ASSISTANT,
+	SSI, LOG_SUPPLY_CHAIN, RECEPTIONIST, FINANCE_ASSOCIATE, FINANCE_OFFICER,
 	CLEANER_KASAJI, HR, KAPANGA_SITE_SUPERVISOR, KASAJI_SITE_SUPERVISOR
 }
 export enum DataStateEnum{
@@ -201,13 +201,4 @@ export interface ConnectedUser{
     jwtToken:string
     online:boolean
 }
-export interface EmployeeDataState<T>{
-    dataState?:DataStateEnum;
-    employs?:Employee[];
-    errorMessage?:string;
-}
-export interface LoginDataState<T>{
-    dataState?:DataStateEnum;
-    data?:any;
-    errorMessage?:string;
-}
+

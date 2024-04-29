@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, catchError, map, of, startWith } from 'rxjs';
-import { DataStateEnum, LoginDataState } from 'src/app/models/timesheet.model';
+import { DataStateEnum } from 'src/app/models/timesheet.model';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({

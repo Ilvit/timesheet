@@ -6,30 +6,28 @@
         <div class="card col-md-6 mt-4  f-bgs bg-primary-subtle bg-gradient opacity-92 ">
             <h2 class="mt-2 ms-3 text-center  ">WELCOME ON FARADJA TIMESHEET APP</h2>
             <div class="card p-3 opacity-100   ">
-                <div class="card-body">
+                <div *ngIf="!timesheetState">                    
+                    <span class="spinner-border ms-3 "></span>
+                </div>
+                <div class="card-body"*ngIf="timesheetState">
                     <div class="mt-1 ">
                         <span class="bg-primary text-light ">ID : </span>
-                        <span class="spinner-border "*ngIf="!timesheetState"></span>
                         <span class="ms-1 ">{{timesheetState.employee.id}} </span>
                     </div>
                     <div class="mt-1 ">
                         <span class="text-light bg-primary  "> NAME: </span>
-                        <span class="spinner-border-sm  "*ngIf="tsDataState==DataStateEnum.LOADING"></span>
                         <span class="ms-1 ">{{timesheetState.employee.name+' '+timesheetState.employee.postName+' '+timesheetState.employee.nickName}} </span>
                     </div>
                     <div class="mt-1 ">
                         <span class="text-light bg-primary  "> Position: </span>
-                        <span class="spinner-border-sm  "*ngIf="tsDataState==DataStateEnum.LOADING"></span>
                         <span class="ms-1 ">{{timesheetState.employee.position}} </span>
                     </div>
                     <div class="mt-1 ">
                         <span class="text-light bg-primary "> Mail: </span>
-                        <span class="spinner-border-sm  "*ngIf="tsDataState==DataStateEnum.LOADING"></span>
                         <span class="ms-1 text-primary text-decoration-underline ">{{timesheetState.employee.mail}} </span>
                     </div>
                     <div class="mt-1 ">
                         <span class="bg-primary text-lg-start text-light ">Total hours : </span>
-                        <span class="spinner-border-sm  "*ngIf="tsDataState==DataStateEnum.LOADING"></span>
                         <span class="ms-1 ">{{timesheetState.vacationReport.totalHours}} </span>
                     </div>
                     <div class="mt-1 ">
@@ -39,7 +37,6 @@
                     </div>
                     <div class="mt-1 ">
                         <span class="bg-primary text-lg-start text-light ">Annual leave (days) : </span>
-                        <span class="spinner-border-sm  "*ngIf="tsDataState==DataStateEnum.LOADING"></span>
                         <span class="ms-1 font-1 text-success ">{{timesheetState.vacationReport.vacationDays}} </span> d
                     </div>     
                 </div>
@@ -48,7 +45,6 @@
                     <div class="mt-1 ">
                         <div class="mt-1 ">
                             <span class="text-light bg-primary  ">Supervisor-name: </span>
-                            <span class="spinner-border ms-3  "*ngIf="tsDataState==DataStateEnum.LOADING"></span>
                             <span class="ms-1 ">{{timesheetState.supervisor.name+' '+timesheetState.supervisor.postName+' '+timesheetState.supervisor.nickName}} </span>
                         </div>
                         <span class="text-light bg-primary  "> Supervisor-ID: </span>

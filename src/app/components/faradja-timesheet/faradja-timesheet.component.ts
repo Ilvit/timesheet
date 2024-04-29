@@ -18,7 +18,7 @@ export class FaradjaTimesheetComponent implements OnInit{
   period!:string;
   saving=false;
   signing=false;
-  hoursLoading=false;
+  rdLoading=false;
   hdLoading=false;
   vdLoading=false;
   timesheetState!:TimesheetState
@@ -48,7 +48,7 @@ export class FaradjaTimesheetComponent implements OnInit{
       next:data=>{
         this.timesheetDataState=DataStateEnum.LOADED;
         this.tsDTO=data;
-        this.period=data.timesheetPeriod;       
+        this.period=data.timesheetPeriod;      
         
       }, error:err=>alert(err)
     })
@@ -79,15 +79,15 @@ export class FaradjaTimesheetComponent implements OnInit{
       })
     }    
   }  
-  getNewRegularDaysLine(){
+  getNewRegularDaysLine(){    
     let selPro=(document.getElementById("selpro") as HTMLSelectElement).value;
     if(this.tsDTO?.rdProjects.includes(selPro)){
       alert("A regular day timesheetline exists for "+selPro+" project");
     }else{      
-      this.hoursLoading=true;
+      this.rdLoading=true;
       this.timesheetService.getNewTimesheetLine(this.period, selPro ,this.authService.employeeID,"BUSDCH-24").subscribe({
         next:data=>{
-          this.hoursLoading=false;
+          this.rdLoading=false;
           this.tsDTO=data;          
         },error:err=>alert("there is an error")
       })
@@ -121,10 +121,10 @@ export class FaradjaTimesheetComponent implements OnInit{
   }
   deleteRegularDaysLine(){
     if(confirm("Do you want to delete Regular-days of all the projects ?")){
-      this.hoursLoading=true;
+      this.rdLoading=true;
       this.timesheetService.deleteTimesheetLine(this.period, this.authService.employeeID,"BUSDCH-24").subscribe({
         next:data=>{          
-          this.hoursLoading=false;
+          this.rdLoading=false
           this.tsDTO=data;
         }
       })
@@ -143,10 +143,10 @@ export class FaradjaTimesheetComponent implements OnInit{
   }
   deleteProjectRegularDaysLine(projectName:string){
     if(confirm("DO you want to delete the "+projectName+" PROJECT Regular timesheet-line ?")){
-      this.hoursLoading=true;
+      this.rdLoading=true;
       this.timesheetService.deleteProjectTimesheetLine(this.period, projectName, this.authService.employeeID,"BUSDCH-24").subscribe({
         next:data=>{
-          this.hoursLoading=false
+          this.rdLoading=false
           this.tsDTO=data;
         }
       })

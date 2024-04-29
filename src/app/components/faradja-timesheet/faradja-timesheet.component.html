@@ -102,7 +102,7 @@
                                     <tr>
                                         <td colspan="17" class="mt-2 text-success bg-white "><button *ngIf="!tsDTO.timesheet.signed" class="btn btn-sm-ts2 btn-danger me-1" (click)="deleteProjectRegularDaysLine(rdpro)"><i class="bi bi-trash"></i></button>Project: {{rdpro}}</td>
                                     </tr> 
-                                    <tr *ngIf="!hoursLoading" >                                                 
+                                    <tr *ngIf="!rdLoading" >                                                 
                                         <td *ngFor="let d of tsDTO.periodDates ">   
                                             <span *ngFor="let rd of tsDTO.timesheet.regularDaysLine">
                                                 <input *ngIf="rd.projectName==rdpro && rd.date==d" [(ngModel)]="rd.hours" [ngModelOptions]="{standalone:true}"value="{{rd.hours}}"
@@ -116,7 +116,7 @@
                                             </span>
                                         </td>
                                     </tr>
-                                    <tr *ngIf="hoursLoading">
+                                    <tr *ngIf="rdLoading">
                                         <td colspan="17">
                                             <span class="spinner-border"></span>
                                         </td>
