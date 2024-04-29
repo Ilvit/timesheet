@@ -21,6 +21,9 @@ import {MatBadgeModule} from "@angular/material/badge";
 import { NotificationPanelComponent } from './components/notification-panel/notification-panel.component';
 import { ControlPanelComponent } from './components/control-panel/control-panel.component';
 import { TimesheetPanelComponent } from './components/timesheet-panel/timesheet-panel.component';
+import { VacationsComponent } from './components/vacations/vacations.component';
+import { ProjectsComponent } from './components/projects/projects.component';
+import { ConnectedUsersComponent } from './components/connected-users/connected-users.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +40,10 @@ import { TimesheetPanelComponent } from './components/timesheet-panel/timesheet-
     EmployeesComponent,
     NotificationPanelComponent,
     ControlPanelComponent,
-    TimesheetPanelComponent
+    TimesheetPanelComponent,
+    VacationsComponent,
+    ProjectsComponent,
+    ConnectedUsersComponent
   ],
   imports: [
     BrowserModule,

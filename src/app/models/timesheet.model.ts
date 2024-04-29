@@ -21,7 +21,7 @@ export interface Timesheet{
     signed:boolean;
     signable:boolean;
     approved:boolean;
-    approvedByCOP:boolean;
+    approvedByDAF:boolean;
     approvable:boolean;
     ok:boolean;
     rejected:boolean;
@@ -59,6 +59,22 @@ export interface VacationReport{
     daysTaken:number
     daysRemaining:number
 }
+export interface Project{
+    id:number;
+    name:string;
+    description:string
+}
+export interface VacationDTO{
+    employee:Employee
+    vacations:Vacation[]
+    vacationReport:VacationReport
+}
+export interface Vacation{
+    id:number
+    employeeID:string
+    daysTaken:number
+    startDate:Date    
+}
 export interface PeriodState{
     period:string;
     finished:boolean;
@@ -88,7 +104,6 @@ export interface NotificationRequest{
 }
 export interface NotificationResponseDTO{
     receiver:Employee;
-    copID:string;
     notifications:Notification[];
     pageSize:number;
     totalPages:number;
@@ -149,10 +164,12 @@ export enum Gender{
     MALE, FEMALE, OTHER
 }
 export enum Position{
-    COP, DCOP, DRIVER, KPTA, DATA, SITE_SUPERVISOR, DAF, CLEANER, IT
+    COP, DCOP, DRIVER, KPTA, DAF, CLEANER_KOLWEZI, SIM, IT,
+	SSI, LOG_SUPPLY_CHAIN, RECEPTIONIST, FINANCE_ASSOCIATE, FINANCE_ASSISTANT,
+	CLEANER_KASAJI, HR, KAPANGA_SITE_SUPERVISOR, KASAJI_SITE_SUPERVISOR
 }
 export enum DataStateEnum{
-    LOADING, LOADED, ERROR
+    LOADING, LOADED, ERROR, NONE, ADDNEW, READ, EDITING
 }
 export enum HolidayStateEnum{
     ADDNEW, EDIT, READ, NONE
@@ -177,6 +194,12 @@ export interface UserDataState<T>{
     dataState?:DataStateEnum;
     appUsers?:AppUser[];
     errorMessage?:string;
+}
+export interface ConnectedUser{
+    id:number
+    username:string
+    jwtToken:string
+    online:boolean
 }
 export interface EmployeeDataState<T>{
     dataState?:DataStateEnum;

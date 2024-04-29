@@ -44,6 +44,7 @@ export class AuthenticationService {
     }
   }
   logout() {
+    this.http.get(this.host+`timesheet/logout?acct=${this.accessToken}`).subscribe();
     this.isAuthenticated=false;
     this.accessToken=undefined;
     this.username="";

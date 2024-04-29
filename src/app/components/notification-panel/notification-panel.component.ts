@@ -49,10 +49,7 @@ export class NotificationPanelComponent implements OnInit {
       this.timesheetService.supervised=false;
     }
     if(idTobeTransferred)this.timesheetService.uEid=idTobeTransferred;
-    if(sender.id==this.notificationResponseDTO.copID){
-      this.timesheetService.uEid=this.authService.employeeID;
-      this.timesheetService.supervised=true
-    }
+    
     this.timesheetService.notifFrom=sender;
     this.router.navigateByUrl("/user/tspanel");
   }

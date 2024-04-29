@@ -209,3 +209,6 @@
     --bs-btn-padding-y:0rem;
     --bs-btn-padding-x:0rem;
 }
+.fill{
+    height: 100%;
+}

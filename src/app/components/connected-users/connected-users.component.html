@@ -1,0 +1,45 @@
+<div class="container-fluid  faradja-bg3 text-light text-center ">CONNECTED USERS</div>
+<div class="p-3  fill-50 card">
+    
+    <div class="row p-1 col-10 offset-1 opacity-90 fill-30rem">
+        <div class="card col-8 fill">
+            <div class="container-fluid text-center text-light faradja-bg2">
+                Connected users
+            </div>
+            <div class="card-body v-center"*ngIf="cuserDataState==DataStateEnum.LOADING" >
+                LOADING.... PLEASE WAIT...
+            </div>
+            <div class="text-center mt-2 mb-2 "*ngIf="cuserDataState==DataStateEnum.LOADED" >
+                <button class="btn btn-info btn-sm"(click)="removeDisconnectedUsers()">Remove all disconnected users</button>
+            </div>
+            <div class="card-body overflow-y-auto p-2 " *ngIf="cuserDataState==DataStateEnum.LOADED">
+                <table class="table table-responsive table-sm table-striped ">
+                    <thead>
+                        <th>USERNAME </th><th>STATUS </th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let cu of connectedUsers">
+                            <td>
+                                {{cu.username}}
+                            </td>
+                            <td>
+                                <button [ngClass]="cu.online?'btn btn-success btn-sm':'btn btn-danger btn-sm'">
+                                    <span *ngIf="cu.online">Online</span>
+                                    <span *ngIf="!cu.online">Disconnected</span>
+                                </button>
+                            </td>                           
+                            <td>
+                                <button class="btn btn-danger btn-sm  " (click)="disconnectUser(cu.jwtToken)" >
+                                    disconnect
+                                </button>
+                            </td>                           
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card col-4">
+            
+        </div>        
+    </div>
+</div>

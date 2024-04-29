@@ -1,0 +1,107 @@
+<div class="faradja-bg3 text-light text-center ">
+    ALL THE PROJECTS
+</div>
+<div class="p-3 v-center fill-80  ">
+    <div class="container col-md-10 offset-1 bg-primary-subtle p-2" *ngIf="projectsDataState==DataStateEnum.LOADED">
+        <ng-container [ngSwitch]="projectsDataState">
+            <ng-container *ngSwitchCase="DataStateEnum.LOADING">
+                <div>
+                    LOADING .... PLEASE WAIT ....
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="DataStateEnum.LOADED">
+                <div class="row col-md-12 ms-1 me-1 ">
+                    <div class="card col-md-7  overflow-auto ">
+                        <table class="table table-sm table-responsive table-striped ">
+                            <thead>
+                                <th>ID</th><th>NAME</th><th>DESCRIPTION</th>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let pr of projects">
+                                    <td>{{pr.id}} </td>
+                                    <td>{{pr.name}} </td>
+                                    <td>{{pr.description}} </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-warning " (click)="editProject(pr.id)">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-danger "(click)="deleteProject(pr.id)">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+        
+                    <!--Add or edit project-->
+                    <div class="card col-md-4 v-center" *ngIf="projectDataState==DataStateEnum.READ">
+                        ALL THE PROJECTS
+                    </div>
+                    <div class="card col-md-4 "*ngIf="projectDataState==DataStateEnum.ADDNEW">
+                        <div class="card mt-2 ">
+                            <div class="card-header faradja-bg2">
+                                <div class="card-title text-light ">
+                                    Add a new project
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <form [formGroup]="projectFormGroup" (ngSubmit)="addNewProject()">
+                                    <div class="input-group ">
+                                        <label for="i_pname" class="input-group-text ">Name</label>
+                                        <input type="text" id="i_pname" class="form-control "placeholder="project name" formControlName="name">
+                                    </div>
+                                    <div class="input-group mt-2 ">
+                                        <label for="i_pdescr" class="input-group-text ">Description</label>
+                                        <input type="text" id="i_pdescr" class="form-control "placeholder="description"formControlName="description">
+                                    </div>
+                                    <div class="align-items-end mt-2 ">
+                                        <button class="btn btn-success btn-sm "type="submit">SUBMIT</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!--Edit the project-->
+        
+                    <div class="card col-md-4 "*ngIf="projectDataState==DataStateEnum.EDITING">
+                        <div class="card mt-2 ">
+                            <div class="card-header faradja-bg2">
+                                <div class="card-title text-light ">
+                                    Edition of {{project.name}} project
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <form [formGroup]="projectFormGroup" (ngSubmit)="updateProject()">
+                                    <div class="input-group ">
+                                        <label for="i_pname" class="input-group-text ">Name</label>
+                                        <input type="text" id="i_pname" class="form-control " formControlName="name">
+                                    </div>
+                                    <div class="input-group mt-2 ">
+                                        <label for="i_pdescr" class="input-group-text ">Description</label>
+                                        <input type="text" id="i_pdescr" class="form-control "formControlName="description">
+                                    </div>
+                                    <div class="align-items-end mt-2 ">
+                                        <button class="btn btn-success btn-sm "type="submit">VALIDATE</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!--Button new project-->
+        
+                    <div class="col-md-1 p-1  ">
+                        <button class="btn btn-success "(click)="getNewProject()" [disabled]="projectDataState==DataStateEnum.ADDNEW||projectDataState==DataStateEnum.EDITING">
+                            New Project 
+                            <i class="bi bi-plus-circle"></i>
+                        </button>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
+    </div>
+</div>

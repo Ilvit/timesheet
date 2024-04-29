@@ -1,191 +1,238 @@
 <h3 class="title-background">My Timesheet</h3>
 <div class="ts-bg ">
     <div class="container-fluid p-2  ">
-        <div class="card ">
+        <div class="card bg-primary-subtle opacity-75 ">
             <div class="card-body text-center ts-dashbord-bg ">
-                <span class="btn btn-info btn-sm ">{{authService.username}} </span>
-                <span class="ms-3 ">ID:</span><span class="btn btn-info btn-sm ms-1  ">{{authService.employeeID}} </span>               
+                <span class="me-1  ">USERNAME : </span>
+                <span class="btn btn-info btn-sm ">
+                    {{authService.username}} 
+                </span>
+                <span class="ms-3 ">ID:</span><span class="btn btn-info btn-sm ms-1  ">{{authService.employeeID}} </span>
             </div>
         </div>
     </div>
     <div class="nav col-md-12 ">
-        <div class="card col-md-2 mt-2">
-            <div class="card-header title-background-card ">
-                Periods
-            </div>
-            <div class="card-body" >
-                <div class="mt-1 " *ngFor="let ps of periodStates">
-                    <button [class]="ps.finished?'btn btn-outline-danger btn-sm text-sm-center':'btn btn-success btn-sm text-sm-center' " (click)="getTimesheetByPeriod(ps.period)">
-                        {{ps.period}}                    
-                    </button> 
+        <div class="card col-md-2 mt-2 homebg2 ">
+            <div class="bg-primary-subtle opacity-90 periods-height ">
+                <div class="card-header title-background-card ">
+                    Periods
                 </div>
-            </div>
-        </div>
-        <div class="card col-md-8 mt-2">
-            <div class="card-header text-center  ">
-                <h2 class="faradja-bg2 p-2 text-light ">USAID-ULINZI 2030</h2>
-            </div>
-            <div class=" text-center tstate-size v-center" *ngIf="!tsDTO && !timesheetState">
-                <span>LOADING....</span>
-                <span>PLEASE WAIT ....</span>
-            </div>
-            <div class="v-center tstate-size" *ngIf="activeTimesheetState">
-                <div *ngIf="timesheetState.canAddNewTimesheet">
-                    <button class="btn btn-success " (click)="getNewTimesheet()">
-                        Get new Timesheet 
-                        <i class="bi bi-plus-circle icon-newts-size"></i>
-                    </button>
-                </div>
-                <div *ngIf="!timesheetState.canAddNewTimesheet">
-                    <button class="btn btn-outline-primary ">
-                       WELCOME TO YOUR TIMESHEET DASHBOARD
-                    </button>
-                </div>
-            </div>
-            <div class=" text-center tstate-size v-center" *ngIf="!tsDTO && timesheetState">
-                <span>LOADING....</span>
-                <span>PLEASE WAIT ....</span>
-            </div>
-
-            <div *ngIf="tsDTO && !activeTimesheetState" class="card-body ">
-                <div class="horiz-bar">                    
-                    <div class="ts-dashbord-bg2  ">
-                        <span class=" me-5 ">REGULAR DAYS TIMESHEET-LINE </span>                         
-                        <select name="s_proj" id="selpro" [disabled]="tsDTO.timesheet.signed">
-                            <option *ngFor="let pr of tsDTO.allProjects" value="{{pr}}">{{pr}} </option>
-                        </select> 
-                        <button *ngIf="!tsDTO.timesheet.signed" class="btn btn-sm-ts btn-success ms-1 " (click)="getNewRegularDaysLine()">
-                            <span class="">+</span>
-                        </button>                     
-                    </div>
-                    <!-- The table header-->
-                    <div >
-                        <table class="ts-bg table-bordered table-responsive  ">
-                            <thead class="theader-bg-color" >                                    
-                                <th *ngFor="let d of tsDTO.periodDates" class="cell-style2">
-                                    <span >{{d|date:'EE'}} </span><br>
-                                    <span >{{d|date:'dd-MMM'}} </span>
-                                </th>
-                                <th  *ngIf="tsDTO.periodDates"><input type="text" class="cell-tvh bg-primary"[disabled]="true"></th>
-                            </thead>
-                            <tbody class=" ts-bg2" *ngFor="let rdpro of tsDTO.rdProjects">
-                                <tr>
-                                    <td colspan="17" class="mt-2 text-success bg-white "><button *ngIf="!tsDTO.timesheet.signed" class="btn btn-sm-ts2 btn-danger me-1" (click)="deleteProjectRegularDaysLine(rdpro)"><i class="bi bi-trash"></i></button>Project: {{rdpro}}</td>
-                                </tr> 
-                                <tr >                                                 
-                                    <td *ngFor="let d of tsDTO.periodDates ">   
-                                        <span *ngFor="let rd of tsDTO.timesheet.regularDaysLine">
-                                            <input *ngIf="rd.projectName==rdpro && rd.date==d" [(ngModel)]="rd.hours" [ngModelOptions]="{standalone:true}"value="{{rd.hours}}"
-                                                [class]="rd.holiday?'cell-style-holiday':(rd.weekend?'cell-style-weekend':'cell-style')" type="number"
-                                                min="0" [max]="(rd.date|date:'EE')=='Fri'?4:9" [disabled]="(rd.holiday||rd.weekend||tsDTO.timesheet.signed)?true:false">                                                       
-                                        </span>    
-                                    </td>
-                                    <td>
-                                        <span *ngFor="let thl of tsDTO?.timesheet?.rdTotalHoursByLine|keyvalue">
-                                            <input *ngIf="rdpro==thl.key" type="text" class="cell-tvh" value="{{thl.value}}"[disabled]="true">
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>                                                        
-                    </div>   
-
-                     <!-- We display holidays of all the existing projects -->
-                     <div class="ts-dashbord-bg2 mt-3">
-                        <span class=" me-5">HOLIDAYS TIMESHEET-LINE </span>    
-                        <select name="s_proj" id="selpro2" class="ms-5" [disabled]="tsDTO.timesheet.signed">
-                            <option *ngFor="let project of tsDTO?.allProjects" value="{{project}}">{{project}} </option>
-                        </select> 
-                        <button *ngIf="!tsDTO.timesheet.signed" class="btn btn-sm-ts btn-success ms-1 "(click)="getNewHolidaysLine()">
-                            <span class="">+</span>
-                        </button>                      
-                    </div>
-
-                    <div>
-                        <table class="ts-bg table-bordered table-responsive   ">
-                            <thead class="theader-bg-color" >                                    
-                                <th *ngFor="let d of tsDTO?.periodDates" class="cell-style2"></th>
-                            </thead>
-                            <tbody class=" ts-bg2" *ngFor="let hdpro of tsDTO.hdProjects">
-                                <tr>
-                                    <td colspan="17" class="mt-2 text-success bg-white "><button *ngIf="!tsDTO.timesheet.signed" class="btn btn-sm-ts2 btn-danger me-1" (click)="deleteProjectHolidaysLine(hdpro)"><i class="bi bi-trash"></i></button>Project: {{hdpro}}</td>
-                                </tr>
-                                <tr >                                                 
-                                    <td class="td-bg-style" *ngFor="let d of tsDTO?.periodDates ">   
-                                        <span *ngFor="let hd of tsDTO.timesheet.holidaysLine">
-                                            <span *ngIf="hd.projectName==hdpro&&hd.date==d"> 
-                                                <input type="number" [(ngModel)]="hd.hours" [ngModelOptions]="{standalone:true}"
-                                                    [class]="hd.holiday?'cell-style-holiday-active':(hd.weekend?'cell-style-weekend':'cell-style-holidayline')" type="number"
-                                                    min="0" [max]="(hd.date|date:'EE')=='Fri'?4:9" [disabled]="(!hd.holiday||hd.weekend||tsDTO.timesheet.signed)?true:false">
-                                            </span>                                                        
-                                        </span>   
-                                    </td>
-                                    <td >
-                                        <span *ngFor="let th of tsDTO.timesheet.hdTotalHoursByLine|keyvalue">
-                                            <input *ngIf="hdpro==th.key" type="text" class="cell-tvh" value="{{th.value}}"[disabled]="true">
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        
-                    </div>
-
-                    <!-- We display vacationDaysLines of all the existing projects -->
-                    <div class="ts-dashbord-bg2 mt-3">
-                       <span class=" me-5">VACATION TIMESHEET-LINE </span>    
-                       <select name="s_proj3" id="selpro3" class="ms-5" [disabled]="tsDTO.timesheet.signed">
-                           <option *ngFor="let project of tsDTO?.allProjects" value="{{project}}">{{project}} </option>
-                       </select> 
-                       <button *ngIf="!tsDTO.timesheet.signed" class="btn btn-sm-ts btn-success ms-1 "(click)="getNewVacationDaysLine()">
-                           <span class="">+</span>
-                       </button>                      
-                    </div>  
-                    <div>
-                        <table class="ts-bg table-bordered table-responsive   ">
-                            <thead class="theader-bg-color" >                                    
-                                <th *ngFor="let d of tsDTO.periodDates" class="cell-style2"></th>
-                            </thead>
-                            <tbody class=" ts-bg2" *ngFor="let vdpro of tsDTO.vdProjects">
-                                <tr>
-                                    <td colspan="17" class="mt-2 text-success bg-white "><button *ngIf="!tsDTO.timesheet.signed" class="btn btn-sm-ts2 btn-danger me-1" (click)="deleteProjectVacationDaysLine(vdpro)"><i class="bi bi-trash"></i></button>Project: {{vdpro}}</td>
-                                </tr>
-                                <tr >                                                 
-                                    <td class="td-bg-style" *ngFor="let d of tsDTO.periodDates ">   
-                                        <span *ngFor="let vd of tsDTO.timesheet.vacationDaysLine">
-                                            <span *ngIf="vd.projectName==vdpro&&vd.date==d"> 
-                                                <input type="number" [(ngModel)]="vd.hours" [ngModelOptions]="{standalone:true}"
-                                                    [class]="vd.holiday?'cell-style-holiday-active':(vd.weekend?'cell-style-weekend':'cell-style-vacationdayline')" type="number"
-                                                    min="0" [max]="(vd.date|date:'EE')=='Fri'?4:9" [disabled]="(vd.weekend||tsDTO.timesheet.signed)?true:false" minlength="0" maxlength="1">
-                                            </span>                                                        
-                                        </span>   
-                                    </td>
-                                    <td >
-                                        <span *ngFor="let th of tsDTO.timesheet.vdTotalHoursByLine|keyvalue">
-                                            <input *ngIf="vdpro==th.key" type="text" class="cell-tvh" value="{{th.value}}"[disabled]="true">
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <!--Totaux verticaux-->   
-                        <table class="ts-bg table-bordered table-responsive mt-5  ">
-                            <thead class="theader-bg-color" >                                    
-                                <th *ngFor="let d of tsDTO.periodDates" class="cell-style2"></th>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td *ngFor="let vth of tsDTO.timesheet.verticalTotalHoursList">
-                                        <input type="text" class="cell-style vth-txt"[disabled]="true" value="{{vth.totalHours}}">
-                                    </td>
-                                    <td *ngIf="tsDTO.timesheet.totalHours"><input type="text" class="cell-tvh" value="{{tsDTO.timesheet.totalHours}}"[disabled]="true" > </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <div class="card-body" >
+                    <div class="mt-1 " *ngFor="let ps of periodStates">
+                        <button [class]="ps.finished?'btn btn-outline-danger btn-sm text-sm-center':'btn btn-success btn-sm text-sm-center' " (click)="getTimesheetByPeriod(ps.period)">
+                            {{ps.period}}                    
+                        </button> 
                     </div>
                 </div>
             </div>
             
+        </div>
+        <div class="card col-md-8 mt-2 homebg2 ">
+            <div class="bg-primary-subtle opacity-90 ">
+                <div class="card-header text-center  ">
+                    <h2 class="faradja-bg2 p-2 text-light ">USAID-ULINZI 2030</h2>
+                </div>
+                <div class=" text-center tstate-size v-center" *ngIf="timesheetDataState==DataStateEnum.LOADING ||timesheetStateDataState==DataStateEnum.LOADING">
+                    <span class="spinner-grow text-success "></span>
+                    <span>PLEASE WAIT ....</span>
+                </div>
+                <div class="v-center tstate-size opacity-92 bg-primary-subtle  " *ngIf="timesheetStateDataState==DataStateEnum.LOADED">
+                    <div *ngIf="timesheetState.canAddNewTimesheet">
+                        <button class="btn btn-success " (click)="getNewTimesheet()">
+                            Get new Timesheet 
+                            <i class="bi bi-plus-circle icon-newts-size"></i>
+                        </button>
+                    </div>
+                    <div class="card col-10 offset-1 " *ngIf="!timesheetState.canAddNewTimesheet">
+                        <div class="card-body">
+                            <div>
+                                <span class="bg-primary text-lg-start text-light ">Current period : </span>
+                                <span class="ms-1 ">{{timesheetState.currentPeriod}} </span>
+                            </div>
+                            <div class="mt-1 ">
+                                <span class="bg-primary text-lg-start text-light ">First-Name : </span>
+                                <span class="ms-1 ">{{timesheetState.employee.nickName}} </span>
+                            </div>
+                            <div class="mt-1 ">
+                                <span class="bg-primary text-lg-start text-light ">Last-Name : </span>
+                                <span class="ms-1 ">{{timesheetState.employee.name}} </span>
+                            </div>
+                            <div class="mt-1 ">
+                                <span class="bg-primary text-lg-start text-light ">Total hours : </span>
+                                <span class="ms-1 ">{{timesheetState.vacationReport.totalHours}} </span>
+                            </div>
+                            <div class="mt-1 ">
+                                <span class="bg-primary text-lg-start text-light ">Annual leave : </span>
+                                <span class="ms-1 font-1 text-success ">{{timesheetState.vacationReport.vacationHours}} </span>hours
+                            </div>
+                            <div class="mt-1 ">
+                                <span class="bg-primary text-lg-start text-light ">Annual leave : </span>
+                                <span class="ms-1 font-1 text-success ">{{timesheetState.vacationReport.vacationDays}} </span> days
+                            </div>
+                            <div class="mt-1 ">
+                                <span class="bg-primary text-lg-start text-light ">Supervisor : </span>
+                                <span class="ms-1 ">{{timesheetState.supervisor.name+' '+timesheetState.supervisor.postName+' '+timesheetState.supervisor.nickName}} </span>                        
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div *ngIf="timesheetDataState==DataStateEnum.READ" class="card-body ">
+                    <div class="horiz-bar">                    
+                        <div class="ts-dashbord-bg2  ">
+                            <span class=" me-5 ">REGULAR DAYS TIMESHEET-LINE </span>                         
+                            <select name="s_proj" id="selpro" [disabled]="tsDTO.timesheet.signed">
+                                <option *ngFor="let pr of tsDTO.allProjects" value="{{pr}}">{{pr}} </option>
+                            </select> 
+                            <button *ngIf="!tsDTO.timesheet.signed" class="btn btn-sm-ts btn-success ms-1 " (click)="getNewRegularDaysLine()">
+                                <span class="">+</span>
+                            </button>                     
+                        </div>
+                        <!-- The table header-->
+                        <div >
+                            <table class="ts-bg table-bordered table-responsive  ">
+                                <thead class="theader-bg-color" >                                    
+                                    <th *ngFor="let d of tsDTO.periodDates" class="cell-style2">
+                                        <span >{{d|date:'EE'}} </span><br>
+                                        <span >{{d|date:'dd-MMM'}} </span>
+                                    </th>
+                                    <th  *ngIf="tsDTO.periodDates"><input type="text" class="cell-tvh bg-primary"[disabled]="true"></th>
+                                </thead>
+                                <tbody class=" ts-bg2" *ngFor="let rdpro of tsDTO.rdProjects">
+                                    <tr>
+                                        <td colspan="17" class="mt-2 text-success bg-white "><button *ngIf="!tsDTO.timesheet.signed" class="btn btn-sm-ts2 btn-danger me-1" (click)="deleteProjectRegularDaysLine(rdpro)"><i class="bi bi-trash"></i></button>Project: {{rdpro}}</td>
+                                    </tr> 
+                                    <tr *ngIf="!hoursLoading" >                                                 
+                                        <td *ngFor="let d of tsDTO.periodDates ">   
+                                            <span *ngFor="let rd of tsDTO.timesheet.regularDaysLine">
+                                                <input *ngIf="rd.projectName==rdpro && rd.date==d" [(ngModel)]="rd.hours" [ngModelOptions]="{standalone:true}"value="{{rd.hours}}"
+                                                    [class]="rd.holiday?'cell-style-holiday':(rd.weekend?'cell-style-weekend':'cell-style')" type="number"
+                                                    min="0" [max]="(rd.date|date:'EE')=='Fri'?4:9" [disabled]="(rd.holiday||rd.weekend||tsDTO.timesheet.signed)?true:false">                                                       
+                                            </span>    
+                                        </td>
+                                        <td>
+                                            <span *ngFor="let thl of tsDTO?.timesheet?.rdTotalHoursByLine|keyvalue">
+                                                <input *ngIf="rdpro==thl.key" type="text" class="cell-tvh" value="{{thl.value}}"[disabled]="true">
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="hoursLoading">
+                                        <td colspan="17">
+                                            <span class="spinner-border"></span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>                                                        
+                        </div>   
+    
+                         <!-- We display holidays of all the existing projects -->
+                         <div class="ts-dashbord-bg2 mt-3">
+                            <span class=" me-5">HOLIDAYS TIMESHEET-LINE </span>    
+                            <select name="s_proj" id="selpro2" class="ms-5" [disabled]="tsDTO.timesheet.signed">
+                                <option *ngFor="let project of tsDTO?.allProjects" value="{{project}}">{{project}} </option>
+                            </select> 
+                            <button *ngIf="!tsDTO.timesheet.signed" class="btn btn-sm-ts btn-success ms-1 "(click)="getNewHolidaysLine()">
+                                <span class="">+</span>
+                            </button>                      
+                        </div>
+    
+                        <div>
+                            <table class="ts-bg table-bordered table-responsive   ">
+                                <thead class="theader-bg-color" >                                    
+                                    <th *ngFor="let d of tsDTO.periodDates" class="cell-style2"></th>
+                                </thead>
+                                <tbody class=" ts-bg2" *ngFor="let hdpro of tsDTO.hdProjects">
+                                    <tr>
+                                        <td colspan="17" class="mt-2 text-success bg-white "><button *ngIf="!tsDTO.timesheet.signed" class="btn btn-sm-ts2 btn-danger me-1" (click)="deleteProjectHolidaysLine(hdpro)"><i class="bi bi-trash"></i></button>Project: {{hdpro}}</td>
+                                    </tr>
+                                    <tr *ngIf="!hdLoading">                                                 
+                                        <td class="td-bg-style" *ngFor="let d of tsDTO.periodDates ">   
+                                            <span *ngFor="let hd of tsDTO.timesheet.holidaysLine">
+                                                <span *ngIf="hd.projectName==hdpro&&hd.date==d"> 
+                                                    <input type="number" [(ngModel)]="hd.hours" [ngModelOptions]="{standalone:true}"
+                                                        [class]="hd.holiday?'cell-style-holiday-active':(hd.weekend?'cell-style-weekend':'cell-style-holidayline')" type="number"
+                                                        min="0" [max]="(hd.date|date:'EE')=='Fri'?4:9" [disabled]="(!hd.holiday||hd.weekend||tsDTO.timesheet.signed)?true:false">
+                                                </span>                                                        
+                                            </span>   
+                                        </td>
+                                        <td >
+                                            <span *ngFor="let th of tsDTO.timesheet.hdTotalHoursByLine|keyvalue">
+                                                <input *ngIf="hdpro==th.key" type="text" class="cell-tvh" value="{{th.value}}"[disabled]="true">
+                                            </span>
+                                        </td>
+                                        
+                                    </tr>
+                                    <tr *ngIf="hdLoading">
+                                        <td colspan="17">
+                                            <span class="spinner-border"></span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                        </div>
+    
+                        <!-- We display vacationDaysLines of all the existing projects -->
+                        <div class="ts-dashbord-bg2 mt-3">
+                           <span class=" me-5">VACATION TIMESHEET-LINE </span>    
+                           <select name="s_proj3" id="selpro3" class="ms-5" [disabled]="tsDTO.timesheet.signed">
+                               <option *ngFor="let project of tsDTO?.allProjects" value="{{project}}">{{project}} </option>
+                           </select> 
+                           <button *ngIf="!tsDTO.timesheet.signed" class="btn btn-sm-ts btn-success ms-1 "(click)="getNewVacationDaysLine()">
+                               <span class="">+</span>
+                           </button>                      
+                        </div>  
+                        <div>
+                            <table class="ts-bg table-bordered table-responsive   ">
+                                <thead class="theader-bg-color" >                                    
+                                    <th *ngFor="let d of tsDTO.periodDates" class="cell-style2"></th>
+                                </thead>
+                                <tbody class=" ts-bg2" *ngFor="let vdpro of tsDTO.vdProjects">
+                                    <tr>
+                                        <td colspan="17" class="mt-2 text-success bg-white "><button *ngIf="!tsDTO.timesheet.signed" class="btn btn-sm-ts2 btn-danger me-1" (click)="deleteProjectVacationDaysLine(vdpro)"><i class="bi bi-trash"></i></button>Project: {{vdpro}}</td>
+                                    </tr>
+                                    <tr *ngIf="!vdLoading">                                                 
+                                        <td class="td-bg-style" *ngFor="let d of tsDTO.periodDates ">   
+                                            <span *ngFor="let vd of tsDTO.timesheet.vacationDaysLine">
+                                                <span *ngIf="vd.projectName==vdpro&&vd.date==d"> 
+                                                    <input type="number" [(ngModel)]="vd.hours" [ngModelOptions]="{standalone:true}"
+                                                        [class]="vd.holiday?'cell-style-holiday-active':(vd.weekend?'cell-style-weekend':'cell-style-vacationdayline')" type="number"
+                                                        min="0" [max]="(vd.date|date:'EE')=='Fri'?4:9" [disabled]="(vd.weekend||tsDTO.timesheet.signed)?true:false" minlength="0" maxlength="1">
+                                                </span>                                                        
+                                            </span>   
+                                        </td>
+                                        <td >
+                                            <span *ngFor="let th of tsDTO.timesheet.vdTotalHoursByLine|keyvalue">
+                                                <input *ngIf="vdpro==th.key" type="text" class="cell-tvh" value="{{th.value}}"[disabled]="true">
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="vdLoading">
+                                        <td colspan="17">
+                                            <span class="spinner-border"></span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!--Totaux verticaux-->   
+                            <table class="ts-bg table-bordered table-responsive mt-5  ">
+                                <thead class="theader-bg-color" >                                    
+                                    <th *ngFor="let d of tsDTO.periodDates" class="cell-style2"></th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td *ngFor="let vth of tsDTO.timesheet.verticalTotalHoursList">
+                                            <input type="text" class="cell-style vth-txt"[disabled]="true" value="{{vth.totalHours}}">
+                                        </td>
+                                        <td *ngIf="tsDTO.timesheet.totalHours"><input type="text" class="cell-tvh" value="{{tsDTO.timesheet.totalHours}}"[disabled]="true" > </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
         </div>
         <div class="card col-1 mt-2 ts-bg">
             <div class="card-header bg-primary ">
@@ -261,8 +308,13 @@
 
                 <div class="btn-group mt-2 mb-2 " *ngIf="tsDTO"> 
                     <button *ngIf="!tsDTO.timesheet.signed" type="button" class="btn btn-outline-success btn-sm " (click)="saveTimesheet()">
-                        Save
-                        <i class="bi bi-save-fill" style="font-size: 1em; color: #007bff;"></i>
+                        <span class="spinner-border "*ngIf="saving">
+                            
+                        </span>
+                        <span *ngIf="!saving">
+                            Save
+                            <i class="bi bi-save-fill" style="font-size: 1em; color: #007bff;"></i>
+                        </span>
                     </button>
                 </div>
                 

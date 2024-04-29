@@ -14,6 +14,9 @@ import { AdminAuthGuard } from './guards/admin-auth.guard';
 import { EmployeesComponent } from './components/employees/employees.component';
 import { NotificationPanelComponent } from './components/notification-panel/notification-panel.component';
 import { TimesheetPanelComponent } from './components/timesheet-panel/timesheet-panel.component';
+import { VacationsComponent } from './components/vacations/vacations.component';
+import { ProjectsComponent } from './components/projects/projects.component';
+import { ConnectedUsersComponent } from './components/connected-users/connected-users.component';
 
 const routes: Routes = [
   {path:"", redirectTo:"/login", pathMatch:'full'},
@@ -28,7 +31,10 @@ const routes: Routes = [
   {path:"admins", component:AdminsComponent, canActivate:[AuthorizationGuard], children:[
     {path:"users", component:UsersComponent, canActivate:[AdminAuthGuard]},
     {path:"employees", component:EmployeesComponent, canActivate:[AdminAuthGuard]},
-    {path:"holidays", component:HolidaysComponent}
+    {path:"vacations", component:VacationsComponent},
+    {path:"holidays", component:HolidaysComponent},
+    {path:"projects", component:ProjectsComponent},
+    {path:"connectedusers", component:ConnectedUsersComponent}
   ]}
 ];
 

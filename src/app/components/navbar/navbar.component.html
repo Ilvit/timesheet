@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg faradja-bg1" >
     <div class="container-fluid">
-      <a class="navbar-brand text-danger " href="#">Navbar</a>
+      <a class="navbar-brand text-danger "><img src="../../../assets/logo.png" alt="faradja_logo" class="logo-size"> </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -12,6 +12,9 @@
           <li class="nav-item"*ngIf="authService.roles.includes('USER')">
             <a class="nav-link text-light" routerLink="/user/ftimesheet">Timesheet</a>
           </li>
+          <li class="nav-item"*ngIf="authService.roles.includes('USER')">
+            <a class="nav-link text-light " routerLink="/user/notifications">Notifications</a>
+          </li>
           <li class="nav-item" *ngIf="authService.roles.includes('USER_READER')">
             <a class="nav-link text-light" routerLink="/admins/holidays">Holidays</a>
           </li>
@@ -19,17 +22,18 @@
             <a class="nav-link text-light" routerLink="/admins/users">Users</a>
           </li>
           <li class="nav-item" *ngIf="authService.roles.includes('ADMIN')">
-            <a class="nav-link text-light" routerLink="/admins/employees">Employees</a>
-          </li>
-          <li class="nav-item dropdown ">
+            <a class="nav-link text-light" routerLink="/admins/connectedusers">Connected-users</a>
+          </li>          
+          <li class="nav-item dropdown "*ngIf="authService.roles.includes('ADMIN')">
             <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Actions 
+              Manage 
             </a> 
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li><a class="dropdown-item" routerLink="/admins/employees" >Employees</a></li>
+              <li><a class="dropdown-item" routerLink="/admins/vacations">Vacations</a></li>
+              <li><a class="dropdown-item" routerLink="/admins/projects">Projects</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
+              
             </ul>
           </li>
           <li class="nav-item">

@@ -1,0 +1,32 @@
+.v-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.faradja-bg2{
+    background-color: rgb(17, 17, 80);
+}
+.faradja-bg3{
+    background-color: orangered;
+}
+.homebg2{
+    background-image: url('../../../assets/logofaradja4.png'); 
+}
+.fill{
+    height: 100%;
+}
+.fill-30rem{
+    height: 30rem;
+}
+.fill-80{
+    height: 80%;
+}
+.fill{
+    height: 100%;
+}
+.fill-90{
+    height: 90%;
+}
+.opacity-90{ 
+    opacity: 90%; 
+}

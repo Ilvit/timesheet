@@ -10,3 +10,19 @@ f-bgs{
 .f-t-c{
     color: orangered;
 }
+.img-size{
+    size: 10rem;
+}
+.homebg{
+    background-image: url('../../../assets/logofaradja3.png'); 
+}
+.opacity-92{
+    opacity: 92%;
+}
+.opacity-90{ 
+    opacity: 90%; 
+}
+.font-1{
+    font-size: x-large;
+    font-family: Arial, Helvetica, sans-serif;
+}

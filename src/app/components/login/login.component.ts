@@ -13,7 +13,7 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 export class LoginComponent implements OnInit{
 
   loginFormGroup!:FormGroup;
-  myData?:Observable<LoginDataState<any>>|null;
+  loginDataState!:DataStateEnum
   readonly DataStateEnum=DataStateEnum;
 
   constructor(private fb:FormBuilder, private authService:AuthenticationService, private router:Router){}
@@ -25,30 +25,20 @@ export class LoginComponent implements OnInit{
     })
   }
   login(){
+    if(this.authService.accessToken)this.authService.logout();
+    this.loginDataState=DataStateEnum.LOADING
     let username=this.loginFormGroup.value.username;
     let password=this.loginFormGroup.value.password;
     this.authService.login(username,password).subscribe({
       next:data=>{
+        this.loginDataState=DataStateEnum.LOADED
         this.authService.loadProfile(data);
         this.router.navigateByUrl("/user/home");
       },error:err=>{
-        console.log(err);
+        this.loginDataState=DataStateEnum.ERROR
+        console.log(err);        
       }
-    })
+    })    
   }
-  newLogin(){
-    let username=this.loginFormGroup.value.username;
-    let password=this.loginFormGroup.value.password;
-    this.myData=this.authService.login(username,password).pipe(
-      map(data=>({dataState:DataStateEnum.LOADED,data:data})),
-      startWith({dataState:DataStateEnum.LOADING}),
-      catchError(err=>of({dataState:DataStateEnum.ERROR, errorMessage:err.message}))
-    );
-    this.myData.subscribe({
-      next:data=>{
-        this.authService.loadProfile(data.data);
-        this.router.navigateByUrl("/user/home")
-      }
-    })
-  }
+  
 }
