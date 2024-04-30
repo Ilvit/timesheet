@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AppUser, Employee, Holiday, Notification, NotificationRequest, NotificationResponseDTO, TimesheetDTO, TimesheetState,  } from '../models/timesheet.model';
+import { AppUser, ConnectedUser, Employee, Holiday, Notification, NotificationRequest, NotificationResponseDTO, Project, TimesheetDTO, TimesheetState, Vacation, VacationDTO,  } from '../models/timesheet.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +13,8 @@ export class FtimesheetService {
   notifFrom!:Employee
   supervised!:boolean
 
- // host="https://timesheetf.onrender.com/";
-  host="http://localhost:8081/";
+  host="https://timesheetf.onrender.com/";
+  //host="http://localhost:8081/";
 
   constructor(private http:HttpClient) { }
 
@@ -42,9 +42,6 @@ export class FtimesheetService {
   }
   public rejectTimesheet(period:string, employeeID:string, supervisorID:string, notificationRequest:NotificationRequest){
     return this.http.post<boolean>(this.host+`timesheet/reject?per=${period}&eid=${employeeID}&sid=${supervisorID}`, notificationRequest);
-  }
-  public copApproveTimesheet(period:string, employeeID:string, notificationRequest:NotificationRequest){
-    return this.http.post<boolean>(this.host+`timesheet/copapprove?per=${period}&eid=${employeeID}`, notificationRequest);
   }
   public deleteTimesheet(period:string, employeeID:string){
     return this.http.delete<TimesheetDTO>(this.host+`timesheet/deleteline?per=${period}&eid=${employeeID}`);
@@ -122,6 +119,50 @@ export class FtimesheetService {
   } 
   public getNotifications(receiverID:string, page:number){
     return this.http.get<NotificationResponseDTO>(this.host+`timesheet/notifications/notifs?eid=${receiverID}&p=${page}`);
+  }
+  public getAllVacations(employeeID:string){
+    return this.http.get<VacationDTO>(this.host+`timesheet/vacations?eid=${employeeID}`);
+  }
+  public getNewVacation(){
+    return this.http.get<Vacation>(this.host+`timesheet/vacations/new`);
+  }
+  public getVacation(id:number){
+    return this.http.get<Vacation>(this.host+`timesheet/vacations/${id}}`);
+  }
+  public saveVacation(vacation:Vacation){
+    return this.http.post<VacationDTO>(this.host+`timesheet/vacations/save`, vacation);
+  }
+  public updateVacation(vacation:Vacation){
+    return this.http.put<VacationDTO>(this.host+`timesheet/vacations/update`, vacation);
+  }
+  //projects
+  public getAllProjects(){
+    return this.http.get<Project[]>(this.host+`timesheet/projects`);
+  }
+  public getNewProject(){
+    return this.http.get<Project>(this.host+`timesheet/projects/new`);
+  }
+  public getProject(id:number){
+    return this.http.get<Project>(this.host+`timesheet/projects/${id}`);
+  }
+  public deleteProject(id:number){
+    return this.http.delete<Project[]>(this.host+`timesheet/projects/delete/${id}`);
+  }
+  public saveProject(project:Project){
+    return this.http.post<Project[]>(this.host+`timesheet/projects/save`, project);
+  }
+  public updateProject(project:Project){
+    return this.http.put<Project[]>(this.host+`timesheet/projects/update`, project);
+  }
+  //connected users
+  public getAllConnectedUsers(){
+    return this.http.get<ConnectedUser[]>(this.host+`timesheet/connectedusers`);
+  }
+  public disconnectUser(accessToken:string){
+    return this.http.get<ConnectedUser[]>(this.host+`timesheet/disconnect?acct=${accessToken}`);
+  }
+  public removeDisconnectedUsers(){
+    return this.http.get<ConnectedUser[]>(this.host+`timesheet/removedisconnectedusers`);
   }
 }
  

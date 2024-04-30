@@ -16,9 +16,15 @@ export class FaradjaTimesheetComponent implements OnInit{
   readonly DataStateEnum=DataStateEnum;
   tsDTO!:TimesheetDTO;
   period!:string;
+  saving=false;
+  signing=false;
+  rdLoading=false;
+  hdLoading=false;
+  vdLoading=false;
   timesheetState!:TimesheetState
   periodStates!:PeriodState[];
-  activeTimesheetState:boolean=false;
+  timesheetDataState!:DataStateEnum;
+  timesheetStateDataState!:DataStateEnum;
   
   constructor(private timesheetService:FtimesheetService, private fb:FormBuilder, public authService:AuthenticationService){}
 
@@ -26,28 +32,33 @@ export class FaradjaTimesheetComponent implements OnInit{
     this.getTimesheetState();    
   }
   getTimesheetState(){
+    this.timesheetStateDataState=DataStateEnum.LOADING;
     this.timesheetService.getTimesheetState(this.authService.employeeID).subscribe({
       next:data=>{
-        this.activeTimesheetState=true;    
+        this.timesheetStateDataState=DataStateEnum.LOADED;
         this.timesheetState=data;     
         this.periodStates=data.periodStates;      
       }, error:err=>alert(err)
     })
   }
   getTimesheet(){
+    this.timesheetStateDataState=DataStateEnum.NONE;
+    this.timesheetDataState=DataStateEnum.LOADING;
     this.timesheetService.getTimesheet(this.period,this.authService.employeeID).subscribe({
       next:data=>{
+        this.timesheetDataState=DataStateEnum.LOADED;
         this.tsDTO=data;
-        this.activeTimesheetState=false;
-        this.period=data.timesheetPeriod;       
+        this.period=data.timesheetPeriod;      
         
       }, error:err=>alert(err)
     })
   }
   getTimesheetByPeriod(per:string){
+    this.timesheetStateDataState=DataStateEnum.NONE;
+    this.timesheetDataState=DataStateEnum.LOADING;
     this.timesheetService.getTimesheet(per, this.authService.employeeID).subscribe({
       next:data=>{
-        this.activeTimesheetState=false; 
+        this.timesheetDataState=DataStateEnum.READ;
         this.tsDTO=data;
         this.period=data.timesheetPeriod;      
        
@@ -59,20 +70,24 @@ export class FaradjaTimesheetComponent implements OnInit{
     if(this.tsDTO?.hdProjects.includes(selPro)){
       alert("A holiday timesheetline exists for "+selPro+" project");
     }else {
+      this.hdLoading=true;
       this.timesheetService.getNewTimesheetLine(this.period,selPro, this.authService.employeeID,"PUBHDCH-24").subscribe({
         next:data=>{
+          this.hdLoading=false;
           this.tsDTO=data;
         }
       })
     }    
   }  
-  getNewRegularDaysLine(){
+  getNewRegularDaysLine(){    
     let selPro=(document.getElementById("selpro") as HTMLSelectElement).value;
     if(this.tsDTO?.rdProjects.includes(selPro)){
       alert("A regular day timesheetline exists for "+selPro+" project");
     }else{      
+      this.rdLoading=true;
       this.timesheetService.getNewTimesheetLine(this.period, selPro ,this.authService.employeeID,"BUSDCH-24").subscribe({
         next:data=>{
+          this.rdLoading=false;
           this.tsDTO=data;          
         },error:err=>alert("there is an error")
       })
@@ -83,8 +98,10 @@ export class FaradjaTimesheetComponent implements OnInit{
     if(this.tsDTO.vdProjects.includes(selPro)){
       alert("vacation-days timesheetline exists for "+selPro+" project");
     }else{
+      this.vdLoading=true
       this.timesheetService.getNewTimesheetLine(this.period, selPro ,this.authService.employeeID,"VACDCH-24").subscribe({
         next:data=>{
+          this.vdLoading=false
           this.tsDTO=data;
         },error:err=>alert("there is an error")
       })
@@ -93,8 +110,10 @@ export class FaradjaTimesheetComponent implements OnInit{
   
   deleteHolidaysLine(){
     if(confirm("Do you want to delete Holidays of all the projects ?")){
+      this.hdLoading=true
       this.timesheetService.deleteTimesheetLine(this.period, this.authService.employeeID,"PUBHDCH-24").subscribe({
         next:data=>{          
+          this.hdLoading=false;
           this.tsDTO=data;
         }
       })
@@ -102,8 +121,10 @@ export class FaradjaTimesheetComponent implements OnInit{
   }
   deleteRegularDaysLine(){
     if(confirm("Do you want to delete Regular-days of all the projects ?")){
+      this.rdLoading=true;
       this.timesheetService.deleteTimesheetLine(this.period, this.authService.employeeID,"BUSDCH-24").subscribe({
         next:data=>{          
+          this.rdLoading=false
           this.tsDTO=data;
         }
       })
@@ -111,8 +132,10 @@ export class FaradjaTimesheetComponent implements OnInit{
   }
   deleteVacationDaysLine(){
     if(confirm("Do you want to delete Vacation-days of all the projects ?")){
+      this.vdLoading=true;
       this.timesheetService.deleteTimesheetLine(this.period, this.authService.employeeID,"VACDCH-24").subscribe({
         next:data=>{          
+        this.vdLoading=false;
           this.tsDTO=data;
         }
       })
@@ -120,8 +143,10 @@ export class FaradjaTimesheetComponent implements OnInit{
   }
   deleteProjectRegularDaysLine(projectName:string){
     if(confirm("DO you want to delete the "+projectName+" PROJECT Regular timesheet-line ?")){
+      this.rdLoading=true;
       this.timesheetService.deleteProjectTimesheetLine(this.period, projectName, this.authService.employeeID,"BUSDCH-24").subscribe({
         next:data=>{
+          this.rdLoading=false
           this.tsDTO=data;
         }
       })
@@ -129,8 +154,10 @@ export class FaradjaTimesheetComponent implements OnInit{
   }
   deleteProjectVacationDaysLine(projectName:string){
     if(confirm("DO you want to delete the "+projectName+" PROJECT Vacation timesheet-line ?")){
+      this.vdLoading=true
       this.timesheetService.deleteProjectTimesheetLine(this.period, projectName, this.authService.employeeID,"VACDCH-24").subscribe({
         next:data=>{
+          this.vdLoading=false;
           this.tsDTO=data;
         }
       })
@@ -138,18 +165,21 @@ export class FaradjaTimesheetComponent implements OnInit{
   }
   deleteProjectHolidaysLine(projectName:string){
     if(confirm("Do you want to delete the "+projectName+" PROJECT Holiday timesheet-line ?")){
+      this.hdLoading=true;
       this.timesheetService.deleteProjectTimesheetLine(this.period, projectName, this.authService.employeeID,"PUBHDCH-24").subscribe({
         next:data=>{
+          this.hdLoading=false
           this.tsDTO=data;
         }
       })
     }    
   }
   getNewTimesheet(){
+    this.timesheetDataState=DataStateEnum.LOADING;
     this.timesheetState.canAddNewTimesheet=false;
     this.timesheetService.getNewTimesheet(this.authService.employeeID).subscribe({
       next:data=>{
-        this.activeTimesheetState=false;        
+        this.timesheetDataState=DataStateEnum.LOADED        
         this.tsDTO=data;
         this.period=data.timesheetPeriod;
         this.periodStates=data.periodStates;
@@ -160,10 +190,12 @@ export class FaradjaTimesheetComponent implements OnInit{
   } 
 
   saveTimesheet() {
+    this.saving=true
     this.timesheetService.saveTimesheet(this.period, this.tsDTO!).subscribe({
       next:data=>{ 
         this.tsDTO=data;
         this.period=data.timesheetPeriod;
+        this.saving=false
       },error:err=>alert(err)
     }) 
   }      
@@ -172,9 +204,11 @@ export class FaradjaTimesheetComponent implements OnInit{
     
   }
   signTimesheet(){
+    this.signing=true;
     this.timesheetService.signTimesheet(this.authService.employeeID,this.period).subscribe({
       next:data=>{
         this.tsDTO.timesheet.signed=data;
+        this.signing=false;
       },error:err=>alert("Not signed")
     })
   }   

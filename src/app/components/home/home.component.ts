@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TimesheetState } from 'src/app/models/timesheet.model';
+import { DataStateEnum, TimesheetState } from 'src/app/models/timesheet.model';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { FtimesheetService } from 'src/app/services/ftimesheet.service';
 
@@ -11,17 +11,21 @@ import { FtimesheetService } from 'src/app/services/ftimesheet.service';
 export class HomeComponent implements OnInit {
 
   timesheetState!:TimesheetState;
-  
+  tsDataState!:DataStateEnum
+  readonly DataStateEnum=DataStateEnum
+
   constructor(private timesheetService:FtimesheetService, public authService:AuthenticationService){}
 
   ngOnInit(): void {
     this.getTimesheetState();
   }
   getTimesheetState(){
+    this.tsDataState=DataStateEnum.LOADING
     this.timesheetService.getTimesheetState(this.authService.employeeID).subscribe({
       next:data=>{   
+        this.tsDataState=DataStateEnum.LOADED
         this.timesheetState=data;   
-      }, error:err=>alert(err)
+      }, error:err=>console.log(err)
     })
   }
 

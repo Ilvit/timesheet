@@ -48,8 +48,8 @@
     border-color: rgb(245, 218, 218);
     width: 45px;
     text-align: center; 
-    color: rgb(255, 187, 246);
-    background-color: rgb(255, 187, 246);
+    color: rgb(237, 245, 147);
+    background-color: rgb(237, 245, 147);
 }
 .cell-style-holiday{   
     border-color: rgb(245, 218, 218);
@@ -105,6 +105,16 @@
 }
 .tstate-size{    
     height: 20rem;
+}
+.tstate-size2{    
+    height: 10rem;
+}
+.periods-height{
+    height: 100%;
+}
+.font-1{
+    font-size: x-large;
+    font-family: Arial, Helvetica, sans-serif;
 }
 .cell-tvh{     
     border: 5px;
@@ -183,4 +193,19 @@
 .td-bg-style{
     --bs-btn-padding-y:0rem;
     --bs-btn-padding-x:0rem;
+}
+.homebg2{
+    background-image: url('../../../assets/logofaradja4.png'); 
+}
+.opacity-92{
+    opacity: 92%;
+}
+.opacity-90{ 
+    opacity: 90%; 
+}
+.opacity-95{ 
+    opacity: 95%; 
+}
+.opacity-98{ 
+    opacity: 98%; 
 }

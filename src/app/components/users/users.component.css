@@ -10,3 +10,21 @@
 .faradja-bg2{
     background-color: rgb(17, 17, 80);
 }
+.faradja-bg3{
+    background-color: orangered;
+}
+.fill-80{
+    height: 80%;
+}
+.fill-60{
+    height: 60%;
+}
+.fill-50{
+    height: 50%;
+}
+.fill-32rem{
+    height: 32rem;
+}
+.fill-20{
+    height: 55px;
+}

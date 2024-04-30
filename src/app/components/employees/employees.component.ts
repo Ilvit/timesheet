@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable, catchError, map, of, startWith } from 'rxjs';
-import { DataStateEnum, Employee, EmployeeDataState, EmployeeStateEnum, Gender, Position } from 'src/app/models/timesheet.model';
+import { DataStateEnum, Employee, Gender, Position } from 'src/app/models/timesheet.model';
 import { FtimesheetService } from 'src/app/services/ftimesheet.service';
 
 @Component({
@@ -11,12 +11,12 @@ import { FtimesheetService } from 'src/app/services/ftimesheet.service';
 })
 export class EmployeesComponent implements OnInit {
   title:string="All the employees";
-  employees?:Observable<EmployeeDataState<Employee[]>>|null;
+  employees!:Employee[];
   employeeTo!:Employee;
   employeeFormGroup!:FormGroup;
   readonly DataStateEnum=DataStateEnum;
-  readonly EmployeeStateEnum=EmployeeStateEnum;
-  employeeStateEnum!:EmployeeStateEnum;
+  employeesDataState!:DataStateEnum;
+  employeeToDataState:DataStateEnum=DataStateEnum.NONE
   genders=Object.values(Gender).filter(v=>isNaN(Number(v)));
   positions=Object.values(Position).filter(v=>isNaN(Number(v)));
 
@@ -26,26 +26,30 @@ export class EmployeesComponent implements OnInit {
     this.getAllEmployees();
   }
   getAllEmployees(){
-    this.employeeStateEnum=EmployeeStateEnum.NONE;
-    this.employees=this.timesheetService.getAllEmployees().pipe(
-      map(data=>({dataState:DataStateEnum.LOADED,employs:data})),
-      startWith({dataState:DataStateEnum.LOADING}),
-      catchError(err=>of({dataState:DataStateEnum.ERROR, errorMessage:err.message}))
-    );
+    this.employeesDataState=DataStateEnum.LOADING;
+    this.timesheetService.getAllEmployees().subscribe({
+      next:data=>{
+        this.employeesDataState=DataStateEnum.LOADED;
+        this.employees=data;
+      }
+    })
   }
   describe(employee: Employee) {
+    this.employeeToDataState=DataStateEnum.LOADING;
     this.timesheetService.getEmployee(employee.id).subscribe({
-      next:employeeto=>{
-        this.employeeStateEnum=EmployeeStateEnum.READ;
-        this.employeeTo=employeeto;
-      },error:err=>alert("Can not describe the employee")
+      next:data=>{
+        this.employeeToDataState=DataStateEnum.LOADED
+        this.employeeTo=data;
+      },error:err=>{
+        console.log(err)
+      }
     })
     
   }
   getNewEmployee(){    
     this.timesheetService.getNewEmployee().subscribe({
       next:newemployee=>{
-        this.employeeStateEnum=EmployeeStateEnum.ADDNEW;
+        this.employeeToDataState=DataStateEnum.ADDNEW;
         this.employeeTo=newemployee;
         this.employeeFormGroup=this.fb.group({
           id:this.fb.control(""),
@@ -62,17 +66,19 @@ export class EmployeesComponent implements OnInit {
     })
   }
   saveEmployee(){
-    this.employeeStateEnum=EmployeeStateEnum.NONE;
-    this.employees=this.timesheetService.saveEmployee(this.employeeFormGroup.value).pipe(
-      map(data=>({dataState:DataStateEnum.LOADED,employs:data})),
-      startWith({dataState:DataStateEnum.LOADING}),
-      catchError(err=>of({dataState:DataStateEnum.ERROR, errorMessage:err.message}))
-    );
+    this.employeeToDataState=DataStateEnum.NONE;
+    this.employeesDataState=DataStateEnum.LOADING
+    this.timesheetService.saveEmployee(this.employeeFormGroup.value).subscribe({
+      next:data=>{
+        this.employeesDataState=DataStateEnum.LOADED
+        this.employees=data
+      }
+    })
   }
   editEmployee(employee:Employee){    
     this.timesheetService.getEmployee(employee.id).subscribe({
       next:employeeto=>{
-        this.employeeStateEnum=EmployeeStateEnum.EDIT;
+        this.employeeToDataState=DataStateEnum.EDITING;
         this.employeeTo=employeeto;
         this.employeeFormGroup=this.fb.group({
           id:this.fb.control(employeeto.id),
@@ -85,26 +91,29 @@ export class EmployeesComponent implements OnInit {
           gender:this.fb.control(employeeto.gender),
           position:this.fb.control(employeeto.position)
         })
-      }, error:err=>alert("Can not be done !")
+      }, error:err=>console.log("Can not be done !")
     })
   }
   deleteEmployee(employee:Employee){
     if(confirm("Do you want to delete the employee "+employee.name+' '+employee.postName+' '+employee.nickName+'?')){
-      this.employeeStateEnum=EmployeeStateEnum.NONE;
-      this.employees=this.timesheetService.deleteEmployee(employee.id).pipe(
-        map(data=>({dataState:DataStateEnum.LOADED,employs:data})),
-        startWith({dataState:DataStateEnum.LOADING}),
-        catchError(err=>of({dataState:DataStateEnum.ERROR, errorMessage:err.message}))
-      );
+      this.employeeToDataState=DataStateEnum.NONE;
+      this.employeesDataState=DataStateEnum.LOADING
+      this.timesheetService.deleteEmployee(employee.id).subscribe({
+        next:data=>{
+          this.employeesDataState=DataStateEnum.LOADED
+          this.employees=data;
+        }
+      })
     }
   }
   updateEmployee(){
-    this.employeeStateEnum=EmployeeStateEnum.NONE;
-    this.employees=this.timesheetService.updateEmployee(this.employeeFormGroup.value).pipe(
-      map(data=>({dataState:DataStateEnum.LOADED,employs:data})),
-      startWith({dataState:DataStateEnum.LOADING}),
-      catchError(err=>of({dataState:DataStateEnum.ERROR, errorMessage:err.message}))
-    );
+    this.employeeToDataState=DataStateEnum.NONE;
+    this.timesheetService.updateEmployee(this.employeeFormGroup.value).subscribe({
+      next:data=>{
+        this.employeesDataState=DataStateEnum.LOADED
+        this.employees=data;
+      }
+    })
   }
     
 }

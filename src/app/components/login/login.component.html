@@ -1,4 +1,4 @@
-<div class="faradja-bg">
+<div class="faradja-bg v-center text-center ">
     <div class="p-4 "></div>
     <div class="card col-4 offset-4 ">
 
@@ -6,31 +6,29 @@
             <span>AUTHENTICATION</span>
         </div>
         <div class="card-body">
-            <form [formGroup]="loginFormGroup" (ngSubmit)="newLogin()">
+            <form [formGroup]="loginFormGroup" (ngSubmit)="login()">
                 <div class="input-group mt-2  ">
                     <label class="input-group-text " for="username">username</label>
-                    <input class="form-control " placeholder="username" type="text" name="" id="username"formControlName="username" >
+                    <input class="form-control " placeholder="username" type="text" name="" id="username"
+                        formControlName="username" [disabled]="loginDataState!=DataStateEnum.LOADING">
                 </div>
                 <div class="input-group mt-2  ">
                     <label class="input-group-text " for="password">password</label>
-                    <input class="form-control "placeholder="password" type="password" name="" id="password"formControlName="password">
+                    <input class="form-control "placeholder="password" type="password" name="" id="password"
+                    formControlName="password" [disabled]="loginDataState!=DataStateEnum.LOADING">
                 </div>
-                <div class="input-group mt-2   ">
-                    <button type="submit" class="btn btn-primary ">Submit</button>
+                <div class="input-group mt-2   " >
+                    <button type="submit" class="btn btn-primary "[disabled]="loginDataState==DataStateEnum.LOADING">Submit</button>
                 </div>
             </form>
+            
         </div>
-        <div>
-            <div class="f-bgc">
-                <ng-container *ngIf="myData|async as authData" [ngSwitch]="authData.dataState">
-                    <ng-container *ngSwitchCase="DataStateEnum.ERROR">
-                        <span class="text-danger t-bgc text-center  "> Failed! please try again </span>
-                    </ng-container>
-                    <ng-container *ngSwitchCase="DataStateEnum.LOADING">
-                        <span class="text-success text-lg-center ">PLEASE WAIT ..... </span>
-                    </ng-container>
-                </ng-container>
-            </div>
-        </div>        
+                   
+    </div>
+    <div *ngIf="loginDataState==DataStateEnum.LOADING" class="spinner-border  text-center text-success mt-3">
+        ....
+    </div>
+    <div *ngIf="loginDataState==DataStateEnum.ERROR" class="text-danger mt-3 ">
+        Can not connect... please try again
     </div>
 </div>

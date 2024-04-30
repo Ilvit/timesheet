@@ -1,0 +1,14 @@
+.v-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.faradja-bg2{
+    background-color: rgb(17, 17, 80);
+}
+.faradja-bg3{
+    background-color: orangered;
+}
+.fill-80{
+    height: 80%;
+}
