@@ -45,14 +45,14 @@ export class TimesheetPanelComponent implements OnInit {
       next:data=>{
         this.tsDTO.timesheet.approved=data;
         if(this.authService.roles.includes('DAF'))this.tsDTO.timesheet.approvedByDAF=data;
-      }, error:err=>alert(err)
+      }, error:err=>console.log(err)
     })
   }
   rejectTimesheet(){
     this.timesheetService.rejectTimesheet(this.timesheetService.uPer, this.timesheetService.uEid, this.authService.employeeID, this.tsFormGroup.value).subscribe({
       next:data=>{
         this.tsDTO.timesheet.rejected=data;
-      }, error:err=>alert(err)
+      }, error:err=>console.log(err)
     })
   }
   rejectApprovedTimesheet(){
@@ -60,7 +60,7 @@ export class TimesheetPanelComponent implements OnInit {
         this.timesheetService.rejectTimesheet(this.timesheetService.uPer, this.timesheetService.uEid, this.authService.employeeID, this.tsFormGroup.value).subscribe({
           next:data=>{
             this.tsDTO.timesheet.rejected=data;
-          }, error:err=>alert(err)
+          }, error:err=>console.log(err)
         })
     }
   }
@@ -68,7 +68,7 @@ export class TimesheetPanelComponent implements OnInit {
     this.timesheetService.getSupervisorNotifications(period, receiverID, senderID).subscribe({
       next:data=>{
         this.notifications=data;
-      },error:err=>alert("Can not get data")
+      },error:err=>console.log("Can not get data")
     })
   }
   editTimesheet(){

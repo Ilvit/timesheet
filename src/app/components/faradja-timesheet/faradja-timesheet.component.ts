@@ -38,7 +38,7 @@ export class FaradjaTimesheetComponent implements OnInit{
         this.timesheetStateDataState=DataStateEnum.LOADED;
         this.timesheetState=data;     
         this.periodStates=data.periodStates;      
-      }, error:err=>alert(err)
+      }, error:err=>console.log(err)
     })
   }
   getTimesheet(){
@@ -50,7 +50,7 @@ export class FaradjaTimesheetComponent implements OnInit{
         this.tsDTO=data;
         this.period=data.timesheetPeriod;      
         
-      }, error:err=>alert(err)
+      }, error:err=>console.log(err)
     })
   }
   getTimesheetByPeriod(per:string){
@@ -62,7 +62,7 @@ export class FaradjaTimesheetComponent implements OnInit{
         this.tsDTO=data;
         this.period=data.timesheetPeriod;      
        
-      }, error:err=>alert(err)
+      }, error:err=>console.log(err)
     })
   }
   getNewHolidaysLine(){    
@@ -89,7 +89,7 @@ export class FaradjaTimesheetComponent implements OnInit{
         next:data=>{
           this.rdLoading=false;
           this.tsDTO=data;          
-        },error:err=>alert("there is an error")
+        },error:err=>console.log("there is an error")
       })
     }   
   }
@@ -103,7 +103,7 @@ export class FaradjaTimesheetComponent implements OnInit{
         next:data=>{
           this.vdLoading=false
           this.tsDTO=data;
-        },error:err=>alert("there is an error")
+        },error:err=>console.log("there is an error")
       })
     }   
   }
@@ -184,7 +184,7 @@ export class FaradjaTimesheetComponent implements OnInit{
         this.period=data.timesheetPeriod;
         this.periodStates=data.periodStates;
       }, error:err=>{
-        alert("Can not load timesheet");
+        console.log("Can not load timesheet");
       }
     })
   } 
@@ -196,7 +196,7 @@ export class FaradjaTimesheetComponent implements OnInit{
         this.tsDTO=data;
         this.period=data.timesheetPeriod;
         this.saving=false
-      },error:err=>alert(err)
+      },error:err=>console.log(err)
     }) 
   }      
 
@@ -209,7 +209,7 @@ export class FaradjaTimesheetComponent implements OnInit{
       next:data=>{
         this.tsDTO.timesheet.signed=data;
         this.signing=false;
-      },error:err=>alert("Not signed")
+      },error:err=>console.log("Not signed")
     })
   }   
 

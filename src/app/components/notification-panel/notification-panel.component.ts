@@ -27,14 +27,14 @@ export class NotificationPanelComponent implements OnInit {
     this.timesheetService.getNotification(notifID).subscribe({
       next:data=>{
         this.notifDTO=data;
-      },error:err=>alert("Can no get the notification")
+      },error:err=>console.log("Can no get the notification")
     })
   } 
   getNotifications(receiverID:string, page:number){
     this.timesheetService.getNotifications(receiverID,page).subscribe({
       next:data=>{
         this.notificationResponseDTO=data;
-      },error:err=>alert("Can no get the notification")
+      },error:err=>console.log("Can no get the notification")
     })
   } 
   seeTimesheet(period:string, sender:Employee, idTobeTransferred:string){
