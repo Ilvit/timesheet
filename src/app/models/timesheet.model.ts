@@ -148,6 +148,7 @@ export interface AppUser{
     username:string;
     mail:string;
     employeeID:string;
+    supervisorID:string;
     roles:Role[];
     userRoles:UserRoles[]
 }

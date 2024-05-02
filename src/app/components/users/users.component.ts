@@ -53,7 +53,7 @@ export class UsersComponent implements OnInit {
           mail:this.fb.control(""),
           employeeID:this.fb.control("")
         })
-      },error:err=>alert("Can not get a new user")
+      },error:err=>console.log("Can not get a new user")
     })
   }
   saveUser(){

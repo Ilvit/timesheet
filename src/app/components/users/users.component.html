@@ -55,14 +55,10 @@
                             <div class="input-group ">
                                 <label class="input-group-text " for="i_pwd2">password</label>
                                 <input type="password" class="form-control " id="i_pwd2" >
-                            </div>
-                            <div class="input-group mt-1  ">
-                                <label class="input-group-text" for="i_mail">E-mail</label>
-                                <input type="email" class="form-control " id="i_mail" formControlName="mail" >
-                            </div>
+                            </div>                            
                             <div class="input-group mt-1  ">
                                 <label class="input-group-text" for="i_eid">Employee-ID</label>
-                                <input type="text" class="form-control-sm  " maxlength="8" id="i_eid" formControlName="employeeID" >
+                                <input type="text" class="form-control-sm  " maxlength="10" id="i_eid" formControlName="employeeID" >
                             </div>
                             <div>Set roles</div>
                             <div >
@@ -100,12 +96,8 @@
                                 <input type="password" class="form-control " id="i_pwd2" >
                             </div>
                             <div class="input-group mt-1  ">
-                                <label class="input-group-text" for="i_mail">E-mail</label>
-                                <input type="email" class="form-control " id="i_mail" formControlName="mail" >
-                            </div>
-                            <div class="input-group mt-1  ">
                                 <label class="input-group-text" for="i_eid">Employee-ID</label>
-                                <input type="text" class="form-control-sm  " maxlength="8" id="i_eid" formControlName="employeeID" >
+                                <input type="text" class="form-control-sm  " maxlength="10" id="i_eid" formControlName="employeeID" >
                             </div>
                             <div class="input-group mt-2 ">
                                 <button class="btn btn-dark " type="submit">Save</button>
@@ -126,6 +118,9 @@
                         <div class="mt-2">
                             <span class="me-2 text-primary  ">Mail : </span><span  class="btn btn-info">{{userTo.mail}} </span>
                         </div>
+                        <div class="mt-2">
+                            <span class="me-2 text-primary  ">Supervisor-ID : </span><span  class="btn btn-info">{{userTo.supervisorID}} </span>
+                        </div>
                         <div class=" card text-success mt-2 mb-2 ">
                             <div class="card-header">
                                 Roles
@@ -139,9 +134,7 @@
                                     </ul>
                                 </div>
                             </div>                                
-                        </div>
-                        
-
+                        </div>   
                     </div>
                 </div>
             </ng-container>

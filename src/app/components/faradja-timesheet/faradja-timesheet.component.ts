@@ -16,7 +16,7 @@ export class FaradjaTimesheetComponent implements OnInit{
   readonly DataStateEnum=DataStateEnum;
   tsDTO!:TimesheetDTO;
   period!:string;
-  saving=false;
+  saving=false;  
   signing=false;
   rdLoading=false;
   hdLoading=false;

@@ -320,8 +320,10 @@
                 
                 <div class="btn-group ">
                     <button *ngIf="!tsDTO.timesheet.signed && tsDTO.timesheet.signable" type="button" class="btn btn-success btn-sm " [disabled]="!tsDTO.timesheet.signable" (click)="signTimesheet()">
-                        Sign
-                        <i class="bi bi-signal" style="font-size: 2em; color: #007bff;"></i>
+                        <span *ngIf="signing" class="spinner-border "></span>
+                        <span *ngIf="!signing" >Sign 
+                            <i class="bi bi-signal" style="font-size: 2em; color: #007bff;"></i>
+                        </span>                        
                     </button>
                 </div>
                 <div class="btn-group ">
