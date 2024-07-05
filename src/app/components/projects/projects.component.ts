@@ -24,12 +24,25 @@ export class ProjectsComponent implements OnInit {
   }
   getAllProjects(){
     this.projectsDataState=DataStateEnum.LOADING;
+    this.projectDataState=DataStateEnum.NONE
     this.timesheetService.getAllProjects().subscribe({
       next:data=>{
         this.projectsDataState=DataStateEnum.LOADED;
         this.projectDataState=DataStateEnum.READ;
         this.projects=data;        
       }, error:err=>alert('Can not get the projects')
+    })
+  }
+  getProject(id:number){
+    this.projectDataState=DataStateEnum.LOADING
+    this.timesheetService.getProject(id).subscribe({
+      next:data=>{
+        this.projectDataState=DataStateEnum.READ
+        this.project=data;
+      },error:err=>{
+        this.projectDataState=DataStateEnum.ERROR
+        console.log(err)
+      }
     })
   }
   editProject(id:number){

@@ -14,13 +14,14 @@
                     <div class="card col-md-7  overflow-auto ">
                         <table class="table table-sm table-responsive table-striped ">
                             <thead>
-                                <th>ID</th><th>NAME</th><th>DESCRIPTION</th>
+                                <th>ID</th><th>NAME</th><th>PROJECT-ID</th><th>DESCRIPTION</th>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let pr of projects">
                                     <td>{{pr.id}} </td>
-                                    <td>{{pr.name}} </td>
-                                    <td>{{pr.description}} </td>
+                                    <td><button class="btn btn-sm" (click)="getProject(pr.id)">{{pr.name}}</button></td>
+                                    <td><button class="btn btn-sm" (click)="getProject(pr.id)">{{pr.projectID}}</button></td>
+                                    <td><button class="btn btn-sm" (click)="getProject(pr.id)">{{pr.description}}</button> </td>
                                     <td>
                                         <button class="btn btn-sm btn-warning " (click)="editProject(pr.id)">
                                             <i class="bi bi-pencil"></i>
@@ -38,7 +39,20 @@
         
                     <!--Add or edit project-->
                     <div class="card col-md-4 v-center" *ngIf="projectDataState==DataStateEnum.READ">
-                        ALL THE PROJECTS
+                        <div >
+                            <span class="text-bg-primary text-light me-2 ">Project name:</span>
+                            <span>{{project.name}}</span>
+                        </div>
+                        <div class="bg-primary container-fluid">
+                            <span class="me-2 ">Name: </span><span class="text-warning">{{project.name}} </span> 
+                            <span class="ms-2 ">project-ID: </span><span class="text-warning">{{project.projectID}} </span>
+                        </div>
+                        <div>
+                            {{project.description}} 
+                        </div>
+                    </div>
+                    <div class="card col-md-4 v-center" *ngIf="projectDataState==DataStateEnum.LOADING">
+                        <span class="spinner-grow "></span>
                     </div>
                     <div class="card col-md-4 "*ngIf="projectDataState==DataStateEnum.ADDNEW">
                         <div class="card mt-2 ">

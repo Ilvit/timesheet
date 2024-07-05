@@ -18,12 +18,12 @@
                     <div class="card mt-3 col-md-8 ts-bg3">
                         <div class=" v-center mt-1 mb-1 "overflow-auto >
                             <span class="ms-2 me-1 "> Name</span> <button class="btn btn-info btn-sm text-white ">{{tsDTO.employee.name+' '+tsDTO.employee.postName+' '+tsDTO.employee.nickName}} </button>
-                            <span class="ms-2 me-1 "> ID</span> <button class="btn btn-info btn-sm text-white ">{{tsDTO.employee.id}} </button>
+                            <span class="ms-2 me-1 "> ID</span> <button class="btn btn-info btn-sm text-white ">{{tsDTO.employee.employeeID}} </button>
                             <span class="ms-2 me-1 "> Period</span> <button class="btn btn-info btn-sm text-white ">{{tsDTO.timesheetPeriod}} </button>
                             <span class="ms-2 me-1 "> Status</span> <button *ngIf="tsDTO.timesheet.signed" class="btn btn-success btn-sm text-white ">Signed </button>
                             <button *ngIf="tsDTO.timesheet.approved" class="btn btn-success btn-sm text-white ms-1 ">Approved </button>                
                         </div>
-                    </div>
+                    </div> 
                     <div class="card col-md-3 mt-3 ms-3  " *ngIf="authService.roles.includes('DAF')">
                         <div class="text-center">
                             <button class="btn btn-sm btn-danger mt-1" (click)="rejectApprovedTimesheet()">Reject ATS</button>

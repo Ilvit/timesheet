@@ -16,12 +16,12 @@
                         <th>NAME :</th>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let e of employees">
+                        <tr *ngFor="let e of employeesDTO.employees">
                             <td>
-                                {{e.id}}
+                                {{e.employeeID}}
                             </td>
                             <td>
-                                <button class="btn btn-sm  "(click)="getAllVacations(e.id)">
+                                <button class="btn btn-sm  "(click)="getAllVacations(e.employeeID)">
                                     {{e.name+' '+e.postName+' '+e.nickName}}
                                 </button>
                             </td>
@@ -55,7 +55,7 @@
             <div class="card-body " *ngIf="vacationDataState==DataStateEnum.LOADED">
                 <div class="mt-2 ">
                     <span class="text-light bg-primary  ">ID</span>
-                    <span class="ms-2">{{vacationDTO.employee.id}}</span>
+                    <span class="ms-2">{{vacationDTO.employee.employeeID}}</span>
                 </div>
                 <div class="mt-2 ">
                     <span class="text-light bg-primary  ">Name</span>

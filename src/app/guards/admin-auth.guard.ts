@@ -12,7 +12,7 @@ export class AdminAuthGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    if(this.authService.roles.includes("ADMIN")){
+    if(this.authService.roles.includes("HR")){
       return true;
     }else{
       this.router.navigateByUrl("/user/accessDenied");

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AppUser, ConnectedUser, Employee, Holiday, Notification, NotificationRequest, NotificationResponseDTO, Project, TimesheetDTO, TimesheetState, Vacation, VacationDTO,  } from '../models/timesheet.model';
+import { AppUser, ConnectedUser, Employee, EmployeesDTO, Holiday, Notification, NotificationRequest, NotificationResponseDTO, Project, TimesheetDTO, TimesheetState, Vacation, VacationDTO, UsersDTO,  } from '../models/timesheet.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +13,8 @@ export class FtimesheetService {
   notifFrom!:Employee
   supervised!:boolean
 
-  host="https://timesheetf.onrender.com/";
-  //host="http://localhost:8081/";
+  //host="https://timesheetf.onrender.com/";
+  host="http://localhost:8081/";
 
   constructor(private http:HttpClient) { }
 
@@ -71,7 +71,7 @@ export class FtimesheetService {
     return this.http.put<Holiday[]>(this.host+`timesheet/holidays/update`, holiday);
   }
   public getAllEmployees(){
-    return this.http.get<Employee[]>(this.host+`timesheet/employees`);
+    return this.http.get<EmployeesDTO>(this.host+`timesheet/employees`);
   }
   public getEmployee(employeeID:string){
     return this.http.get<Employee>(this.host+`timesheet/employees/employee?eid=${employeeID}`);
@@ -80,17 +80,17 @@ export class FtimesheetService {
     return this.http.get<Employee>(this.host+`timesheet/employees/new`);
   }
   public saveEmployee(employee:Employee){
-    return this.http.post<Employee[]>(this.host+`timesheet/employees/save`, employee);
+    return this.http.post<EmployeesDTO>(this.host+`timesheet/employees/save`, employee);
   }
   public deleteEmployee(employeeID:string){
-    return this.http.delete<Employee[]>(this.host+`timesheet/employees/delete?eid=${employeeID}`);
+    return this.http.delete<EmployeesDTO>(this.host+`timesheet/employees/delete?eid=${employeeID}`);
   }
   public updateEmployee(employee:Employee){
-    return this.http.put<Employee[]>(this.host+`timesheet/employees/update`, employee);
+    return this.http.put<EmployeesDTO>(this.host+`timesheet/employees/update`, employee);
   }
   
   public getAllUsers(){
-    return this.http.get<AppUser[]>(this.host+`timesheet/users`);
+    return this.http.get<UsersDTO>(this.host+`timesheet/users`);
   }
   public getUser(username:string){
     return this.http.get<AppUser>(this.host+`timesheet/users/user?un=${username}`);
@@ -99,13 +99,13 @@ export class FtimesheetService {
     return this.http.get<AppUser>(this.host+`timesheet/users/new`);
   }
   public saveUser(user:AppUser){
-    return this.http.post<AppUser[]>(this.host+`timesheet/users/save`, user);
+    return this.http.post<UsersDTO>(this.host+`timesheet/users/save`, user);
   }
   public deleteUser(username:string){
-    return this.http.delete<AppUser[]>(this.host+`timesheet/users/delete?un=${username}`);
+    return this.http.delete<UsersDTO>(this.host+`timesheet/users/delete?un=${username}`);
   }
   public updateUser(user:AppUser){
-    return this.http.put<AppUser[]>(this.host+`timesheet/users/update`, user);
+    return this.http.put<UsersDTO>(this.host+`timesheet/users/update`, user);
   }
 
   public getAllNotifications(ofEmployeeID:string){

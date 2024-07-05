@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable, catchError, map, of, startWith } from 'rxjs';
-import { DataStateEnum, Employee, Gender, Position } from 'src/app/models/timesheet.model';
+import { DataStateEnum, Employee, EmployeesDTO, Gender } from 'src/app/models/timesheet.model';
 import { FtimesheetService } from 'src/app/services/ftimesheet.service';
 
 @Component({
@@ -11,15 +11,13 @@ import { FtimesheetService } from 'src/app/services/ftimesheet.service';
 })
 export class EmployeesComponent implements OnInit {
   title:string="All the employees";
-  employees!:Employee[];
+  employeesDTO!:EmployeesDTO;
   employeeTo!:Employee;
   employeeFormGroup!:FormGroup;
   readonly DataStateEnum=DataStateEnum;
   employeesDataState!:DataStateEnum;
   employeeToDataState:DataStateEnum=DataStateEnum.NONE
   genders=Object.values(Gender).filter(v=>isNaN(Number(v)));
-  positions=Object.values(Position).filter(v=>isNaN(Number(v)));
-
   constructor(public timesheetService:FtimesheetService, private fb:FormBuilder){}
 
   ngOnInit(): void {
@@ -30,13 +28,13 @@ export class EmployeesComponent implements OnInit {
     this.timesheetService.getAllEmployees().subscribe({
       next:data=>{
         this.employeesDataState=DataStateEnum.LOADED;
-        this.employees=data;
+        this.employeesDTO=data;
       }
     })
   }
   describe(employee: Employee) {
     this.employeeToDataState=DataStateEnum.LOADING;
-    this.timesheetService.getEmployee(employee.id).subscribe({
+    this.timesheetService.getEmployee(employee.employeeID).subscribe({
       next:data=>{
         this.employeeToDataState=DataStateEnum.LOADED
         this.employeeTo=data;
@@ -52,7 +50,7 @@ export class EmployeesComponent implements OnInit {
         this.employeeToDataState=DataStateEnum.ADDNEW;
         this.employeeTo=newemployee;
         this.employeeFormGroup=this.fb.group({
-          id:this.fb.control(""),
+          employeeID:this.fb.control(""),
           name:this.fb.control(""),
           postName:this.fb.control(""),
           nickName:this.fb.control(""),
@@ -71,17 +69,18 @@ export class EmployeesComponent implements OnInit {
     this.timesheetService.saveEmployee(this.employeeFormGroup.value).subscribe({
       next:data=>{
         this.employeesDataState=DataStateEnum.LOADED
-        this.employees=data
+        this.employeesDTO=data
       }
     })
   }
   editEmployee(employee:Employee){    
-    this.timesheetService.getEmployee(employee.id).subscribe({
+    this.timesheetService.getEmployee(employee.employeeID).subscribe({
       next:employeeto=>{
         this.employeeToDataState=DataStateEnum.EDITING;
         this.employeeTo=employeeto;
         this.employeeFormGroup=this.fb.group({
           id:this.fb.control(employeeto.id),
+          employeeID:this.fb.control(employeeto.employeeID),
           name:this.fb.control(employeeto.name),
           postName:this.fb.control(employeeto.postName),
           nickName:this.fb.control(employeeto.nickName),
@@ -98,10 +97,10 @@ export class EmployeesComponent implements OnInit {
     if(confirm("Do you want to delete the employee "+employee.name+' '+employee.postName+' '+employee.nickName+'?')){
       this.employeeToDataState=DataStateEnum.NONE;
       this.employeesDataState=DataStateEnum.LOADING
-      this.timesheetService.deleteEmployee(employee.id).subscribe({
+      this.timesheetService.deleteEmployee(employee.employeeID).subscribe({
         next:data=>{
           this.employeesDataState=DataStateEnum.LOADED
-          this.employees=data;
+          this.employeesDTO=data;
         }
       })
     }
@@ -111,7 +110,7 @@ export class EmployeesComponent implements OnInit {
     this.timesheetService.updateEmployee(this.employeeFormGroup.value).subscribe({
       next:data=>{
         this.employeesDataState=DataStateEnum.LOADED
-        this.employees=data;
+        this.employeesDTO=data;
       }
     })
   }

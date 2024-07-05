@@ -11,23 +11,23 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let notif of notificationResponseDTO.notifications">
-                        <td *ngIf="notif.sender.id!=authService.employeeID">
+                        <td *ngIf="notif.sender.employeeID!=authService.employeeID">
                             <button class="btn btn-sm" (click)="getNotification(notif.id)">
                                 {{notif.instant|date:'EE dd-MMM-yyyy'}}
                                 <span class="text-primary ms-2"> {{notif.instant|date:' HH:mm:ss'}}</span>
                             </button>
                         </td>
-                        <td *ngIf="notif.sender.id!=authService.employeeID">
+                        <td *ngIf="notif.sender.employeeID!=authService.employeeID">
                             <button class="btn btn-sm  "(click)="getNotification(notif.id)" >
                                 <span class="text-success me-2">{{notif.sender.position}} </span>{{notif.sender.name+' '+notif.sender.postName+' '+notif.sender.nickName}}
                             </button>
                         </td>
-                        <td *ngIf="notif.sender.id!=authService.employeeID">
+                        <td *ngIf="notif.sender.employeeID!=authService.employeeID">
                             <button class="btn btn-sm "(click)="getNotification(notif.id)" >
                                 <span class="text-success">{{notif.msgObject}}</span>
                             </button>
                         </td>
-                        <td *ngIf="notif.sender.id!=authService.employeeID">
+                        <td *ngIf="notif.sender.employeeID!=authService.employeeID">
                             <button class="btn btn-sm btn-info "(click)="seeTimesheet(notif.period, notif.sender, notif.idTobeTransferred)" >See the timesheet</button>
                         </td>
                     </tr>
@@ -36,7 +36,7 @@
             <div>
                 <ul class="nav ">
                     <li class="nav-item " *ngFor="let np of notificationResponseDTO.pagesArray">
-                        <a (click)="getNotifications(notificationResponseDTO.receiver.id, np)" [class]="np==notificationResponseDTO.currentPage?'btn btn-sm btn-info ms-1':'btn btn-sm btn-outline-info ms-1'">{{np}} </a>
+                        <a (click)="getNotifications(notificationResponseDTO.receiver.employeeID, np)" [class]="np==notificationResponseDTO.currentPage?'btn btn-sm btn-info ms-1':'btn btn-sm btn-outline-info ms-1'">{{np}} </a>
                     </li>
                 </ul>
             </div>

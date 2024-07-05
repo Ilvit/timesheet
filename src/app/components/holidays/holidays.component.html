@@ -2,12 +2,12 @@
 <div class="row p-2  ">
     <div class="row col-12 ">
         <div class="card col-7 mt-sm-1 ">
-            <ng-container *ngIf="holidays|async as result" [ngSwitch]="result.dataState">
+            <ng-container [ngSwitch]="holidaysStateEnum">
                 <ng-container *ngSwitchCase="DataStateEnum.ERROR">
-                    <span class="alert-danger text-center ">{{result.errorMessage}} </span>
+                    <span class="alert-danger text-center ">CAN NOT GET HOLIDAYS </span>
                 </ng-container>
                 <ng-container *ngSwitchCase="DataStateEnum.LOADING">
-                    <span class="text-success text-center ">
+                    <span class="spinner-border ">
                         LOADING.....
                     </span>
                 </ng-container>
@@ -17,7 +17,7 @@
                             <th>ID</th><th>Date</th><th>Description</th>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let hd of result.hdays">
+                            <tr *ngFor="let hd of holidays">
                                 <td>{{hd.id}} </td><td><button class="btn" (click)="describe(hd)">{{hd.date | date:'EEEE dd-MMMM-yyyy' }}</button> </td><td><button class="btn" (click)="describe(hd)">{{hd.description}}</button> </td>
                                 <td>
                                     <button class="btn btn-sm btn-warning " (click)="editHoliday(hd)"><i class="bi bi-pencil-fill"></i> </button>    
@@ -34,10 +34,10 @@
         </div>
         <div class="card col-4 p-2  ">
             <ng-container [ngSwitch]="holidayStateEnum" >
-                <ng-container *ngSwitchCase="HolidayStateEnum.NONE">
+                <ng-container *ngSwitchCase="DataStateEnum.NONE">
                     <h2 class="text-center text-primary ">WELCOME </h2>
                 </ng-container>
-                <ng-container *ngSwitchCase="HolidayStateEnum.EDIT">
+                <ng-container *ngSwitchCase="DataStateEnum.EDITING">
                     <div class="mt-2 card ">
                         <div class="card-header ">EDIT THE HOLIDAY</div>
                         <div class="card-body">
@@ -57,7 +57,7 @@
                         </div>
                     </div>
                 </ng-container>
-                <ng-container *ngSwitchCase="HolidayStateEnum.ADDNEW">
+                <ng-container *ngSwitchCase="DataStateEnum.ADDNEW">
                     <div class="mt-2 card ">
                         <div class="card-header ">ADD A NEW HOLIDAY</div>
                         <div class="card-body">
@@ -77,7 +77,7 @@
                         </div>
                     </div>
                 </ng-container>
-                <ng-container *ngSwitchCase="HolidayStateEnum.READ">
+                <ng-container *ngSwitchCase="DataStateEnum.READ">
                     <h3 class="text-center text-dark justify-content-center  ">{{description}} </h3 >
                 </ng-container>
             </ng-container>

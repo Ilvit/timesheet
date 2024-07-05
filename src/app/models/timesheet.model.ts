@@ -62,6 +62,7 @@ export interface VacationReport{
 export interface Project{
     id:number;
     name:string;
+    projectID:string
     description:string
 }
 export interface VacationDTO{
@@ -125,15 +126,20 @@ export interface Sheetday{
     dayType:string
 }
 export interface Employee{
-    id:string;
+    id:number;
+    employeeID:string;
     name:string;
     postName:string;
     nickName:string;
     mail:string;
     phoneNumber:string;
     gender:Gender;
-    position:Position;
+    position:string;
     supervisorID:string
+}
+export interface EmployeesDTO{
+    employees:Employee[]
+    positions:string[]
 }
 export interface DayHours{
     title:string;
@@ -164,37 +170,16 @@ export interface UserRoles{
 export enum Gender{
     MALE, FEMALE, OTHER
 }
-export enum Position{
-    COP, DCOP, DRIVER, KPTA, DAF, CLEANER_KOLWEZI, SIM, IT,
-	SSI, LOG_SUPPLY_CHAIN, RECEPTIONIST, FINANCE_ASSOCIATE, FINANCE_OFFICER,
-	CLEANER_KASAJI, HR, KAPANGA_SITE_SUPERVISOR, KASAJI_SITE_SUPERVISOR
-}
+
 export enum DataStateEnum{
     LOADING, LOADED, ERROR, NONE, ADDNEW, READ, EDITING
-}
-export enum HolidayStateEnum{
-    ADDNEW, EDIT, READ, NONE
-}
-export enum AppUserStateEnum{
-    ADDNEW, EDIT, READ, NONE
 }
 export enum EmployeeStateEnum{
     ADDNEW, EDIT, READ, NONE
 }
-export interface AppDataState<T>{
-    dataState?:DataStateEnum;
-    timesheetDto?:TimesheetDTO;
-    errorMessage?:string;
-}
-export interface HolidayDataState<T>{
-    dataState?:DataStateEnum;
-    hdays?:Holiday[];
-    errorMessage?:string;
-}
-export interface UserDataState<T>{
-    dataState?:DataStateEnum;
-    appUsers?:AppUser[];
-    errorMessage?:string;
+export interface UsersDTO{
+    users:AppUser[]
+    employees:Employee[]
 }
 export interface ConnectedUser{
     id:number

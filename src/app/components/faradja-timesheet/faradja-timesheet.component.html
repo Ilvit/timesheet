@@ -8,6 +8,9 @@
                     {{authService.username}} 
                 </span>
                 <span class="ms-3 ">ID:</span><span class="btn btn-info btn-sm ms-1  ">{{authService.employeeID}} </span>
+                <button class="btn btn-success btn-sm" (click)="generatePDF()">
+                    Generate the timesheet report
+                </button>
             </div>
         </div>
     </div>
@@ -30,7 +33,7 @@
         <div class="card col-md-8 mt-2 homebg2 ">
             <div class="bg-primary-subtle opacity-90 ">
                 <div class="card-header text-center  ">
-                    <h2 class="faradja-bg2 p-2 text-light ">USAID-ULINZI 2030</h2>
+                    <h2 class="faradja-bg2 p-2 text-light ">USAID-ULINZI</h2>
                 </div>
                 <div class=" text-center tstate-size v-center" *ngIf="timesheetDataState==DataStateEnum.LOADING ||timesheetStateDataState==DataStateEnum.LOADING">
                     <span class="spinner-grow text-success "></span>
@@ -77,7 +80,7 @@
                     </div>
                 </div>
                 
-                <div *ngIf="timesheetDataState==DataStateEnum.READ" class="card-body ">
+                <div id="ts_report" *ngIf="timesheetDataState==DataStateEnum.READ" class="card-body ">
                     <div class="horiz-bar">                    
                         <div class="ts-dashbord-bg2  ">
                             <span class=" me-5 ">REGULAR DAYS TIMESHEET-LINE </span>                         

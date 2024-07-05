@@ -2,9 +2,11 @@ import { KeyValuePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable, catchError, map, max, of, startWith } from 'rxjs';
-import { AppDataState, DataStateEnum, PeriodState, TimesheetDTO, TimesheetState } from 'src/app/models/timesheet.model';
+import { DataStateEnum, PeriodState, TimesheetDTO, TimesheetState } from 'src/app/models/timesheet.model';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { FtimesheetService } from 'src/app/services/ftimesheet.service';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-faradja-timesheet',
@@ -30,6 +32,14 @@ export class FaradjaTimesheetComponent implements OnInit{
 
   ngOnInit(): void {        
     this.getTimesheetState();    
+  }
+  generatePDF(){
+    const elementToCapture:any=document.getElementById("ts_report");
+    const pdfReport=new jsPDF();
+    html2canvas(elementToCapture, {scale:2}).then(canvas=>{
+      pdfReport.addImage(canvas.toDataURL("image/png"),"PNG", 5,5,210,100);
+      pdfReport.save(this.timesheetState.employee.nickName+' '+this.timesheetState.employee.name+'-'+this.timesheetState.currentPeriod+".pdf");
+    })
   }
   getTimesheetState(){
     this.timesheetStateDataState=DataStateEnum.LOADING;

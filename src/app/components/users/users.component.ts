@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable, catchError, map, of, startWith } from 'rxjs';
-import { AppUser, AppUserStateEnum, DataStateEnum, UserDataState } from 'src/app/models/timesheet.model';
+import { AppUser, DataStateEnum, UsersDTO} from 'src/app/models/timesheet.model';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { FtimesheetService } from 'src/app/services/ftimesheet.service';
 
@@ -13,12 +13,12 @@ import { FtimesheetService } from 'src/app/services/ftimesheet.service';
 export class UsersComponent implements OnInit {
 
   title:string="All the users";
-  users?:Observable<UserDataState<AppUser[]>>|null;
+  usersDTO!:UsersDTO
   userTo!:AppUser;
   userFormGroup!:FormGroup;
   readonly DataStateEnum=DataStateEnum;
-  readonly AppUserStateEnum=AppUserStateEnum;
-  appUserStateEnum!:AppUserStateEnum;
+  usersStateEnum!:DataStateEnum;
+  appUserStateEnum!:DataStateEnum;
 
   constructor(public timesheetService:FtimesheetService, private fb:FormBuilder){}
 
@@ -26,26 +26,29 @@ export class UsersComponent implements OnInit {
     this.getAllUsers();
   }
   getAllUsers(){
-    this.appUserStateEnum=AppUserStateEnum.NONE;
-    this.users=this.timesheetService.getAllUsers().pipe(
-      map(data=>({dataState:DataStateEnum.LOADED,appUsers:data})),
-      startWith({dataState:DataStateEnum.LOADING}),
-      catchError(err=>of({dataState:DataStateEnum.ERROR, errorMessage:err.message}))
-    );
+    this.appUserStateEnum=DataStateEnum.NONE;
+    this.usersStateEnum=DataStateEnum.LOADING
+    this.timesheetService.getAllUsers().subscribe({
+      next:data=>{
+        this.usersStateEnum=DataStateEnum.LOADED
+        this.usersDTO=data        
+      },error:err=>console.log(err)
+    })
   }
   describe(user: AppUser) {
+    this.appUserStateEnum=DataStateEnum.LOADING
     this.timesheetService.getUser(user.username).subscribe({
       next:userto=>{
-        this.appUserStateEnum=AppUserStateEnum.READ;
+        this.appUserStateEnum=DataStateEnum.READ
         this.userTo=userto;
-      }, error:err=>alert("Can not read the user")
+      }, error:err=>console.log(err)
     })
     
   }
   getNewUser(){    
+    this.appUserStateEnum=DataStateEnum.ADDNEW
     this.timesheetService.getNewUser().subscribe({
       next:newuser=>{
-        this.appUserStateEnum=AppUserStateEnum.ADDNEW;
         this.userTo=newuser;
         this.userFormGroup=this.fb.group({
           username:this.fb.control(""),
@@ -53,21 +56,26 @@ export class UsersComponent implements OnInit {
           mail:this.fb.control(""),
           employeeID:this.fb.control("")
         })
-      },error:err=>console.log("Can not get a new user")
+      },error:err=>console.log(err)
     })
   }
   saveUser(){
-    this.appUserStateEnum=AppUserStateEnum.NONE;
-    this.users=this.timesheetService.saveUser(this.userFormGroup.value).pipe(
-      map(data=>({dataState:DataStateEnum.LOADED,appUsers:data})),
-      startWith({dataState:DataStateEnum.LOADING}),
-      catchError(err=>of({dataState:DataStateEnum.ERROR, errorMessage:err.message}))
-    );
+    this.usersStateEnum=DataStateEnum.LOADING
+    this.timesheetService.saveUser(this.userFormGroup.value).subscribe({
+      next:data=>{
+        this.appUserStateEnum=DataStateEnum.NONE
+        this.usersStateEnum=DataStateEnum.LOADED
+        this.usersDTO=data;
+      },error:err=>{
+        this.usersStateEnum=DataStateEnum.ERROR
+        console.log(err)
+      }
+    })
   }
-  editUser(user:AppUser){    
+  editUser(user:AppUser){   
+    this.appUserStateEnum=DataStateEnum.EDITING
     this.timesheetService.getUser(user.username).subscribe({
       next:userto=>{
-        this.appUserStateEnum=AppUserStateEnum.EDIT;
         this.userTo=userto;
         this.userFormGroup=this.fb.group({
           username:this.fb.control(userto.username),
@@ -76,22 +84,33 @@ export class UsersComponent implements OnInit {
           employeeID:this.fb.control(userto.employeeID),
           userRoles:this.fb.array(userto.userRoles)
         })
-      }, error:err=>alert("Can not be done !")
+      }, error:err=>console.log(err)
     })
   }
   deleteUser(user:AppUser){
-    this.users=this.timesheetService.deleteUser(user.username).pipe(
-      map(data=>({dataState:DataStateEnum.LOADED,appUsers:data})),
-      startWith({dataState:DataStateEnum.LOADING}),
-      catchError(err=>of({dataState:DataStateEnum.ERROR, errorMessage:err.message}))
-    );
+    this.usersStateEnum=DataStateEnum.LOADING
+    this.timesheetService.deleteUser(user.username).subscribe({
+      next:data=>{
+        this.usersStateEnum=DataStateEnum.LOADED
+        this.usersDTO=data
+      }, error:err=>{
+        this.usersStateEnum=DataStateEnum.ERROR
+        console.log(err)
+      }
+    })
   }
   updateUser(){
-    this.users=this.timesheetService.updateUser(this.userFormGroup.value).pipe(
-      map(data=>({dataState:DataStateEnum.LOADED,appUsers:data})),
-      startWith({dataState:DataStateEnum.LOADING}),
-      catchError(err=>of({dataState:DataStateEnum.ERROR, errorMessage:err.message}))
-    );
+    this.usersStateEnum=DataStateEnum.LOADING
+    this.timesheetService.updateUser(this.userFormGroup.value).subscribe({
+      next:data=>{
+        this.appUserStateEnum=DataStateEnum.NONE
+        this.usersStateEnum=DataStateEnum.LOADED
+        this.usersDTO=data
+      },error:err=>{
+        this.usersStateEnum=DataStateEnum.ERROR
+        console.log(err)
+      }
+    })
   }
     
 }

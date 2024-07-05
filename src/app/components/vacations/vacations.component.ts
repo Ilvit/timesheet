@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { DataStateEnum, Employee, Vacation, VacationDTO } from 'src/app/models/timesheet.model';
+import { DataStateEnum, Employee, EmployeesDTO, Vacation, VacationDTO } from 'src/app/models/timesheet.model';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { FtimesheetService } from 'src/app/services/ftimesheet.service';
 
@@ -12,7 +12,7 @@ import { FtimesheetService } from 'src/app/services/ftimesheet.service';
 export class VacationsComponent implements OnInit {
 
   vacationFormGroup!:FormGroup;
-  employees!:Employee[];
+  employeesDTO!:EmployeesDTO;
   vacation!:Vacation;
   vacationDTO!:VacationDTO;
   vacationDataState!:DataStateEnum;
@@ -39,7 +39,7 @@ export class VacationsComponent implements OnInit {
     this.timesheetService.getAllEmployees().subscribe({
       next:data=>{
         this.employeesDataState=DataStateEnum.LOADED;
-        this.employees=data;
+        this.employeesDTO=data;
       },error:err=>alert("can not get employees")
     })
   }
@@ -47,12 +47,12 @@ export class VacationsComponent implements OnInit {
     this.timesheetService.getNewVacation().subscribe({
       next:data=>{
         this.vacationDataState=DataStateEnum.ADDNEW;
-        this.employeeID=employee.id;
+        this.employeeID=employee.employeeID;
         this.vacation=data;
         this.vacationFormGroup=this.fb.group({
           startDate:this.fb.control(this.vacation.startDate),
           daysTaken:this.fb.control(""),
-          employeeID:this.fb.control(employee.id)
+          employeeID:this.fb.control(employee.employeeID)
         })
       },error:err=>alert(err)
     })
@@ -65,7 +65,7 @@ export class VacationsComponent implements OnInit {
         next:data=>{
           this.vacationDataState=DataStateEnum.LOADED;
           this.vacationDTO=data;
-        },error:err=>alert("Can not save")
+        },error:err=>console.log("Can not save")
       })
       }
     }    
