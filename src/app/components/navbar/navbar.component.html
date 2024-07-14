@@ -15,27 +15,25 @@
           <li class="nav-item"*ngIf="authService.roles.includes('USER')">
             <a class="nav-link text-light " routerLink="/user/notifications">Notifications</a>
           </li>
+          <li  class="nav-item" *ngIf="authService.roles.includes('HR')">
+            <a class="nav-link text-light" routerLink="/admins/employees" >Employees</a>
+          </li>
           <li class="nav-item" *ngIf="authService.roles.includes('HR')">
             <a class="nav-link text-light" routerLink="/admins/holidays">Holidays</a>
           </li>
+          
           <li class="nav-item" *ngIf="authService.roles.includes('HR')">
             <a class="nav-link text-light" routerLink="/admins/users">Users</a>
           </li>
+          <li  *ngIf="authService.roles.includes('HR')">
+            <a class="nav-link text-light" routerLink="/admins/vacations">Vacations</a>
+          </li>
+          <li  *ngIf="authService.roles.includes('ADMIN')">
+            <a class="nav-link text-light" routerLink="/admins/projects">Projects</a>
+          </li>
           <li class="nav-item" *ngIf="authService.roles.includes('ADMIN')">
             <a class="nav-link text-light" routerLink="/admins/connectedusers">Connected-users</a>
-          </li>          
-          <li class="nav-item dropdown "*ngIf="authService.roles.includes('USER')">
-            <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Manage 
-            </a> 
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" routerLink="/admins/employees" >Employees</a></li>
-              <li><a class="dropdown-item" routerLink="/admins/vacations">Vacations</a></li>
-              <li><a class="dropdown-item" routerLink="/admins/projects">Projects</a></li>
-              <li><hr class="dropdown-divider"></li>
-              
-            </ul>
-          </li>
+          </li>             
           <li class="nav-item">
             <a class="nav-link disabled text-light " routerLink="/login" >About</a>
           </li>

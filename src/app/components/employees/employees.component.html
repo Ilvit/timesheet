@@ -80,9 +80,13 @@
                             </div>
                             <div class="input-group mt-1  ">
                                 <label class="input-group-text" for="i_seid">Supervisor</label>
-                                <select name="supervisor" id="i_seid"  maxlength="10" formControlName="supervisorID">
+                                <select name="supervisor" id="i_seid"  maxlength="9" formControlName="supervisorID">
                                     <option *ngFor="let sup of employeesDTO.employees" value="{{sup.employeeID}}"><span class="text-success me-1 ">{{sup.position}}</span> <span class="ms-1">::{{sup.nickName+' '+sup.name}}</span> </option>
                                 </select>
+                            </div>
+                            <div class="input-group mt-1  ">
+                                <label class="input-group-text" for="i_owh">Other worked hours</label>
+                                <input type="number" class="form-control " id="i_owh" formControlName="otherWorkedHours" >
                             </div>
                             <div class="input-group mt-2 ">
                                 <button class="btn btn-dark " type="submit">Save</button>

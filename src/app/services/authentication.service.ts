@@ -11,12 +11,15 @@ export class AuthenticationService {
   isAuthenticated:boolean=false;
   roles:any; 
   username!:string;
-  employeeID!:string;
+  employeeID!:string; 
   accessToken:any;
   
+//host="http://192.168.88.13:8081/"; 
+ host="http://192.168.232.24:8081/";
+ // host="http://ftimesheet-env.eba-h4kvxmic.eu-west-3.elasticbeanstalk.com/";
  //host="https://timesheetf.onrender.com/";
-host="http://localhost:8081/";
-
+//host="http://localhost:8081/";
+ 
   constructor(private http:HttpClient, private router:Router) { }
 
   public login(username:string, password:string){

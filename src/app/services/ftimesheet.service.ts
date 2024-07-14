@@ -11,10 +11,13 @@ export class FtimesheetService {
   uEid!:string;
   sEid!:string;
   notifFrom!:Employee
-  supervised!:boolean
+  supervised!:boolean 
 
+  //host="http://192.168.88.13:8081/";
+  host="http://192.168.232.24:8081/";
+ // host="http://ftimesheet-env.eba-h4kvxmic.eu-west-3.elasticbeanstalk.com/";
   //host="https://timesheetf.onrender.com/";
-  host="http://localhost:8081/";
+  //host="http://localhost:8081/";
 
   constructor(private http:HttpClient) { }
 

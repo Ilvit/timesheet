@@ -5,7 +5,7 @@ export interface TimesheetDTO{
     timesheetPeriod:string;
     periodDates:Array<Date>;
     periodStates:PeriodState[];
-    regularDaysPresent:boolean;
+    regularDaysPresent:boolean; 
     vacationDaysPresent:boolean;
     holidaysPresent:boolean;    
     rdProjects:Array<string>;
@@ -136,6 +136,7 @@ export interface Employee{
     gender:Gender;
     position:string;
     supervisorID:string
+    otherWorkedHours:number
 }
 export interface EmployeesDTO{
     employees:Employee[]

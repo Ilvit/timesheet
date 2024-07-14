@@ -88,7 +88,8 @@ export class EmployeesComponent implements OnInit {
           phoneNumber:this.fb.control(employeeto.phoneNumber),
           supervisorID:this.fb.control(employeeto.supervisorID),
           gender:this.fb.control(employeeto.gender),
-          position:this.fb.control(employeeto.position)
+          position:this.fb.control(employeeto.position),
+          otherWorkedHours:this.fb.control(employeeto.otherWorkedHours)
         })
       }, error:err=>console.log("Can not be done !")
     })
