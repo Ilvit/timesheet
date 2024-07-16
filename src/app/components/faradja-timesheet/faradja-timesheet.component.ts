@@ -32,11 +32,13 @@ export class FaradjaTimesheetComponent implements OnInit{
 
   ngOnInit(): void {        
     this.getTimesheetState();    
-  }
+  } 
   generatePDF(){
+    let text:string="Start of period : ";
+    let text2:string="End of period : "+this.timesheetState.currentPeriod;
     const elementToCapture:any=document.getElementById("ts_report");
     const pdfReport=new jsPDF();
-    html2canvas(elementToCapture, {scale:2}).then(canvas=>{
+    html2canvas(elementToCapture, {scale:2}).then(canvas=>{ 
       pdfReport.addImage(canvas.toDataURL("image/png"),"PNG", 5,5,210,100);
       pdfReport.save(this.timesheetState.employee.nickName+' '+this.timesheetState.employee.name+'-'+this.timesheetState.currentPeriod+".pdf");
     })
@@ -58,7 +60,7 @@ export class FaradjaTimesheetComponent implements OnInit{
       next:data=>{
         this.timesheetDataState=DataStateEnum.LOADED;
         this.tsDTO=data;
-        this.period=data.timesheetPeriod;      
+        this.period=data.timesheetPeriod;
         
       }, error:err=>console.log(err)
     })
